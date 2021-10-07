@@ -64,18 +64,20 @@ BinaPy.from_json({"foo": "bar"}).encode_b64u()
 ```
 Loading serialized and encoded data can be done this way:
 ```python
-BinaPy(b"ewoiZm9vIjogImJhciIKfQ").decode_b64u().to_json()
+BinaPy(b"ewoiZm9vIjogImJhciIKfQ").decode_b64u().parse_json()
 # {'foo': 'bar'}
 ```
 
 ## extend
 You can implement additional methods for BinaPy. Methods can implement one or several of the following features:
 
-- an *encoder*: this will transform/encode the current BinaPy into another format. E.g., a base64 encoder will transform arbitrary binary data into a base64 encoded string.
+- an *encoder*: this will transform/encode the current BinaPy into another BinaPy. E.g., a base64 encoder will transform arbitrary binary data into a base64 encoded string.
 - a *decoder*: this will transform an encoded data back into its initial data. E.g., a base64 decoder.
-- a *checker*: this will check if a given data conforms to a given format. Which means this data could have been produced with a matching *encoder* and can probably be decoded with the matching *decoder*, if available.
+- a *checker*: this will check if a given data conforms to a given format. Which means that this data could have been produced with a matching *encoder* and can probably be decoded with the matching *decoder*, if available.
+- a *parser*: this will parse the current BinaPy data into another format. E.g., a JSON parser
+- a *serializer*: this will serialize data from another format into a BinaPy. E.g, a JSON dumper
 
-Note that the terms *encode* and *decode* are quite loose, because they are applied to compression, hashing and other transformations.
+Note that the terms *encode* and *decode* are quite loose, because they are applied to compression, hashing and other transformations that produce or consume binary data.
 
 To implement such a method, use one of the `binapy_<feature>()` decorator. It takes the name of the extension as parameter.
 

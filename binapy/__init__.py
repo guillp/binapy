@@ -8,9 +8,9 @@ from .binapy import (
     BinaPy,
     binapy_checker,
     binapy_decoder,
-    binapy_dumper,
     binapy_encoder,
-    binapy_loader,
+    binapy_parser,
+    binapy_serializer,
 )
 from .compression import *
 from .encoding import *

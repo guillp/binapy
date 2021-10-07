@@ -3,12 +3,14 @@
 
 import pytest
 
-from binapy.binapy import BinaPy
+from binapy.binapy import BinaPy, binapy_decoder
 
 BINARY = b"\xd2m'\x10\x7f\xa9\xb0\xf4f\x9e\x85\xedBK%\x93"
 BASE64 = b"0m0nEH+psPRmnoXtQkslkw=="
 BASE64U = b"0m0nEH-psPRmnoXtQkslkw"
 SHA256 = b"\x91\x02\xef\xd5U\xa6\xefr\xc9B\x18\x16\xa9\xf2\x8d\xf1Ur\x1d\xd1\x9en\xa0)\xf8\xb6\x0b\x93\x81\xce\xbc="
+
+JSON = {"foo": "bar"}
 
 
 @pytest.fixture
@@ -46,6 +48,16 @@ def test_binary(binary_sample):
     assert b64.decode_from("b64") == BINARY
     assert bp.encode_to("b64") == b64
 
+    bp_add = BinaPy(b"123") + b"456"
+    assert isinstance(bp_add, BinaPy)
+    assert bp_add == BinaPy(b"123456")
+
+    bp_radd = b"123" + BinaPy(b"456")
+    assert isinstance(bp_radd, BinaPy)
+    assert bp_radd == BinaPy(b"123456")
+
+    assert BinaPy.serialize_from("json", JSON).parse_to("json") == JSON
+
 
 def test_helloworld():
     hello_world = "Hello, World!"
@@ -68,7 +80,7 @@ def test_random():
     assert bp != b"\00" * 12
 
 
-def test_exceptions():
+def test_unknown_features():
     bp = BinaPy.random(12)
     with pytest.raises(ValueError):
         bp.encode_to("something_not_known")
@@ -80,4 +92,26 @@ def test_exceptions():
         bp.check("something_not_known")
 
     with pytest.raises(ValueError):
-        bp.load("something_not_known")
+        bp.parse_to("something_not_known")
+
+    with pytest.raises(ValueError):
+        BinaPy.serialize_from("something_not_known", {"foo": "bar"})
+
+
+def test_exceptions():
+    @binapy_decoder("some_feature")
+    def check_some_feature(bp):
+        return bp
+
+    bp = BinaPy()
+
+    assert bp.check("some_feature") is False
+    assert bp.check("some_feature", decode=True) is True
+
+    @binapy_decoder("other_feature")
+    def check_other_feature(bp):
+        raise ValueError()
+
+    bp = BinaPy()
+    assert bp.check("other_feature") is False
+    assert bp.check("other_feature", decode=True) is False
