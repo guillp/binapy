@@ -2,8 +2,7 @@
 
 ## Stable release
 
-To install BinaPy, run this command in your
-terminal:
+To install BinaPy, run this command in your terminal:
 
 ```console
 $ pip install binapy

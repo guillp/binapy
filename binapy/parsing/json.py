@@ -1,13 +1,13 @@
 import json
 
-from binapy import binapy_extension
+from binapy import binapy_dumper, binapy_loader
 
 
-@binapy_extension("json", decode=True)
-def parse_json(self):
+@binapy_loader("json")
+def to_json(self):
     return json.loads(self)
 
 
-@binapy_extension("json", encode=True)
-def from_json(self, data, indent=0):
+@binapy_dumper("json")
+def from_json(data, indent=0):
     return json.dumps(data, indent=indent)

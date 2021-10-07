@@ -1,4 +1,5 @@
 import pytest
+
 from binapy import BinaPy
 
 PASSWORDS_HASHES = {"{SSHA}PdZrFYJugDAsBhR5U6OssLd+HSZ/JvYcDmSwCQ==": r"BzEuZ6vVRS"}
