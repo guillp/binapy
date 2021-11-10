@@ -276,9 +276,9 @@ class BinaPy(bytes):
 
 
 def binapy_encoder(name: str):
-    def decorator(func):
+    def decorator(func: Callable[..., Any]):
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> BinaPy:
             raw_result = func(*args, **kwargs)
             if not isinstance(raw_result, (bytes, bytearray, str)):
                 raise ValueError(

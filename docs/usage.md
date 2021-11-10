@@ -50,11 +50,13 @@ bp.check_all()
 # ['sha1']
 ```
 
-While a given string with only hex characters could be a hexadecimal string, or
+While a given string with only hex characters could be a hexadecimal string, it could also be the result of a base64
+or a base64url encoding.
 ```python
 bp = BinaPy("abcdef1234567890")
 bp.check_all()
-# ['sha1']
+# ['b64', 'b64u', 'hex']
+# ['b64', 'b64u', 'hex']
 ```
 ## load and dump
 Dumping and encoding data can be done this way:
@@ -102,4 +104,5 @@ Some formats such as *base64* can have all 3 methods implemented. Others such as
 - the encoder does the actual hashing (that is, by definition, irreversible)
 - the checker method checks that a given data is the appropriate length for the given hash
 
-Finally, some formats like *gzip* do not have a checker method, because trying to decode the data is faster and easier than validating it statically. BinaPy will try the decode method instead and see if it raises an Exception.
+Finally, some formats like *gzip* do not have a checker method, because trying to decode the data is faster and easier than validating it statically.
+BinaPy will then try the decode method instead and see if it raises an Exception.

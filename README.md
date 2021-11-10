@@ -49,7 +49,7 @@ isinstance(bp, bytes)
 
 ## TODO
 
-- add more parsing formats like YAML
+- add more parsing formats like YAML, CBOR, etc.
 - optionally use faster third-party modules when available
 
 ## Credits
