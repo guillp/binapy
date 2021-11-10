@@ -10,5 +10,11 @@ def to_json(bp: bytes) -> bytes:
 
 
 @binapy_serializer("json")
-def from_json(data: Any, indent: int = 0) -> bytes:
-    return json.dumps(data, indent=indent).encode()
+def from_json(data: Any, compact: bool = True) -> bytes:
+    if compact:
+        separators = (",", ":")
+        indent = None
+    else:
+        separators = (", ", ": ")
+        indent = 2
+    return json.dumps(data, separators=separators, indent=indent).encode()
