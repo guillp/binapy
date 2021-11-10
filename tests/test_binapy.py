@@ -3,7 +3,7 @@
 
 import pytest
 
-from binapy.binapy import BinaPy, binapy_decoder
+from binapy import BinaPy, binapy_decoder
 
 BINARY = b"\xd2m'\x10\x7f\xa9\xb0\xf4f\x9e\x85\xedBK%\x93"
 BASE64 = b"0m0nEH+psPRmnoXtQkslkw=="
@@ -67,11 +67,14 @@ def test_helloworld():
 
 
 def test_int():
-    bp = BinaPy.from_int(0x12345678901234567890)
+    i = 0x12345678901234567890
+    bp = BinaPy.from_int(i)
     assert bp == b"\x12\x34\x56\x78\x90\x12\x34\x56\x78\x90"
+    assert bp.to_int() == i
 
-    bp = BinaPy.from_int(0x12345678901234567890, length=12)
+    bp = BinaPy.from_int(i, length=12)
     assert bp == b"\x00\x00\x12\x34\x56\x78\x90\x12\x34\x56\x78\x90"
+    assert bp.to_int() == i
 
 
 def test_random():

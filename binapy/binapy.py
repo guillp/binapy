@@ -46,7 +46,7 @@ class BinaPy(bytes):
         signed: bool = False,
     ) -> BinaPy:
         """
-        Converts an int to a BinaPy. This is a wrapper around
+        Convert an `int` to a `BinaPy`. This is a wrapper around
         [int.to_bytes()](https://docs.python.org/3/library/stdtypes.html#int.to_bytes) and takes
         the same parameters.
         Args:
@@ -64,6 +64,22 @@ class BinaPy(bytes):
 
         data = i.to_bytes(length, byteorder, signed=signed)
         return cls(data)
+
+    def to_int(self, byteorder: str = "big", signed: bool = False) -> int:
+        """
+        Convert this BinaPy to an `int`.
+
+        This is a wrapper around
+        [int.from_bytes()](https://docs.python.org/3/library/stdtypes.html#int.from_bytes) and takes
+        the same parameters.
+        Args:
+            byteorder: "little" or "big" (defaults to "big")
+            signed: determines whether two’s complement is used to represent the integer. Default to False.
+
+        Returns:
+            an integer based on this BinaPy binary value
+        """
+        return int.from_bytes(self, byteorder, signed=signed)
 
     @classmethod
     def random(cls, length: int) -> BinaPy:
