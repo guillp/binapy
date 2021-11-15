@@ -4,7 +4,7 @@ from binapy import binapy_decoder, binapy_encoder
 
 
 @binapy_encoder("url")
-def url_encode(bp, safe="/", plus_spaces=True):
+def url_encode(bp: str, safe: str = "/", plus_spaces: bool = True) -> str:
     if plus_spaces:
         return quote_plus(bp, safe=safe)
     else:
@@ -12,7 +12,7 @@ def url_encode(bp, safe="/", plus_spaces=True):
 
 
 @binapy_decoder("url")
-def url_decode(bp, plus_spaces=True, errors="replace"):
+def url_decode(bp: bytes, plus_spaces: bool = True, errors: str = "replace") -> bytes:
     if plus_spaces:
         return unquote_plus(bp.decode(), errors=errors).encode()
     else:

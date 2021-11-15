@@ -10,7 +10,7 @@ def encode_b64(bp: bytes) -> bytes:
 
 
 @binapy_decoder("b64")
-def decode_b64(bp: bytes, strict=True) -> bytes:
+def decode_b64(bp: bytes, strict: bool = True) -> bytes:
     if strict and not is_b64(bp):
         raise ValueError("not a base64")
     return base64.b64decode(bp)

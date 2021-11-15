@@ -2,38 +2,23 @@ import pytest
 
 from binapy import BinaPy
 
-PASSWORDS_HASHES = {
-    "{SSHA}PdZrFYJugDAsBhR5U6OssLd+HSZ/JvYcDmSwCQ==": r"BzEuZ6vVRS",
-    "{SSHA512}ZGdo6Ebqtsts554kedXUeO77GwnVexnl89SdA6cWgjOw4o+3EwzFAi7XJReFcG7xqLSDasj05qw8wuSjIcpgi0XlGAlSRg67": "changeme",
-}
 
-
-@pytest.fixture(params=PASSWORDS_HASHES.keys())
-def ldap_password_hash(request):
-    return request.param
-
-
-@pytest.fixture
-def password(ldap_password_hash):
-    return PASSWORDS_HASHES.get(ldap_password_hash)
-
-
-def test_validate_ldap_password_hash(ldap_password_hash, password):
-    bp = BinaPy(ldap_password_hash, encoding="UTF-8")
-    if bp.startswith(b"{SHA}"):
-        hash, salt = bp[5:].decode_b64().cut_at(20)
-        assert BinaPy(password).hash_sha1(salt, append=True) == hash
-    elif bp.startswith(b"{SSHA}"):
-        hash, salt = bp[6:].decode_b64().cut_at(20)
-        assert BinaPy(password).hash_ssha1(salt, append=True) == hash
-    elif bp.startswith(b"{SHA256}"):
-        hash, salt = bp[8:].decode_b64().cut_at(32)
-        assert BinaPy(password).hash_sha256(salt, append=True) == hash
-    elif bp.startswith(b"{SSHA256}"):
-        hash, salt = bp[9:].decode_b64().cut_at(32)
-        assert BinaPy(password).hash_ssha256(salt, append=True) == hash
-    elif bp.startswith(b"{SSHA512}"):
-        hash, salt = bp[9:].decode_b64().cut_at(64)
-        assert BinaPy(password).hash_ssha512(salt, append=True) == hash
-    else:
-        assert False, "unsupported hash type"
+@pytest.mark.parametrize(
+    "ldap_password_hash, hashing, hash_size, password",
+    (
+        (b"{SSHA}PdZrFYJugDAsBhR5U6OssLd+HSZ/JvYcDmSwCQ==", "ssha1", 20, r"BzEuZ6vVRS"),
+        (
+            b"{SSHA512}ZGdo6Ebqtsts554kedXUeO77GwnVexnl89SdA6cWgjOw4o+3EwzFAi7XJReFcG7xqLSDasj05qw8wuSjIcpgi0XlGAlSRg67",
+            "ssha512",
+            64,
+            "changeme",
+        ),
+    ),
+)
+def test_validate_ldap_password_hash(
+    ldap_password_hash: bytes, hashing: str, hash_size: int, password: str
+) -> None:
+    bp = BinaPy(ldap_password_hash)
+    header, hash_with_salt = bp.split(b"}", 1)
+    hash, salt = hash_with_salt.decode_from("b64").cut_at(hash_size)
+    assert BinaPy(password).encode_to(hashing, salt, append=True) == hash
