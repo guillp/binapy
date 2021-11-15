@@ -1,6 +1,10 @@
 # History
 
-## 0.1.1 (2021-11-10')
+## 0.3.0 (2021-11-15)
+
+* Renaming `serialize_from()` to `serialize_to()` and `parse_to()` to `parse_from()`.
+
+## 0.2.0 (2021-11-10)
 
 * Serialize JSON as compact by default
 * `datetime` instances are serialized to epoch timestamps when serializing JSON (but they are not converted back on parsing).

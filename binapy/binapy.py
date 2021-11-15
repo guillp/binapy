@@ -299,7 +299,7 @@ class BinaPy(bytes):
 
         return list(get_results())
 
-    def parse_to(self, name: str, *args: Any, **kwargs: Any) -> Any:
+    def parse_from(self, name: str, *args: Any, **kwargs: Any) -> Any:
         """
         Parse data from this BinaPy, based on a given extension format.
         Args:
@@ -308,23 +308,23 @@ class BinaPy(bytes):
             **kwargs: additional keyword parameters for the extension decoder method
 
         Returns:
-            result from the extension loader method
+            the result from parsing this BinaPy
         """
         parser = self.get_parser(name)
 
         return parser(self, *args, **kwargs)
 
     @classmethod
-    def serialize_from(cls, name: str, *args: Any, **kwargs: Any) -> BinaPy:
+    def serialize_to(cls, name: str, *args: Any, **kwargs: Any) -> BinaPy:
         """
-        Dump data from this BinaPy, based on a given extension format.
+        Serialize (dump) data to a BinaPy, based on a given extension format.
         Args:
             name: name of the extension to use
-            *args: additional position parameters for the extension decoder method
+            *args: additional position parameters for the extension decoder method (which includes the data to serialize)
             **kwargs: additional keyword parameters for the extension decoder method
 
         Returns:
-            result from the extension loader method
+            a BinaPy, resulting from serialization of the data
         """
         serializer = cls.get_serializer(name)
 

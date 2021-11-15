@@ -49,7 +49,7 @@ def test_binapy() -> None:
     assert isinstance(bp_radd, BinaPy)
     assert bp_radd == BinaPy(b"123456")
 
-    assert BinaPy.serialize_from("json", JSON).parse_to("json") == JSON
+    assert BinaPy.serialize_to("json", JSON).parse_from("json") == JSON
 
 
 def test_helloworld() -> None:
@@ -88,10 +88,10 @@ def test_unknown_features() -> None:
         bp.check("something_not_known")
 
     with pytest.raises(ValueError):
-        bp.parse_to("something_not_known")
+        bp.parse_from("something_not_known")
 
     with pytest.raises(ValueError):
-        BinaPy.serialize_from("something_not_known", {"foo": "bar"})
+        BinaPy.serialize_to("something_not_known", {"foo": "bar"})
 
 
 def test_exceptions() -> None:

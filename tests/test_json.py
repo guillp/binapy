@@ -4,15 +4,15 @@ from binapy import BinaPy
 
 
 def test_json() -> None:
-    bp = BinaPy.serialize_from("json", {"hello": "world"}).encode_to("b64")
+    bp = BinaPy.serialize_to("json", {"hello": "world"}).encode_to("b64")
     assert bp == b"eyJoZWxsbyI6IndvcmxkIn0="
-    data = bp.decode_from("b64").parse_to("json")
+    data = bp.decode_from("b64").parse_from("json")
     assert data == {"hello": "world"}
 
 
 def test_json_datetime() -> None:
     """Datetimes are serialized to integer epoch timestamps, but integer stay integers when parsed."""
-    bp = BinaPy.serialize_from(
+    bp = BinaPy.serialize_to(
         "json",
         {
             "iat": datetime(
@@ -28,4 +28,4 @@ def test_json_datetime() -> None:
     )
     assert bp == b'{"iat":1600000000}'
 
-    assert bp.parse_to("json") == {"iat": 1600000000}
+    assert bp.parse_from("json") == {"iat": 1600000000}
