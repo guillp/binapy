@@ -1,5 +1,4 @@
 """Main module."""
-from __future__ import annotations
 
 import secrets
 from functools import wraps
@@ -12,7 +11,8 @@ class BinaPy(bytes):
     Since this is a bytes subclass, you can use instances of BinaPy anywhere you can use bytes.
     This provides a few helper methods compared to plain bytes.
     Actual transformations such as `encode_b64()` or `hash_sha256()` are implemented using Extensions.
-    Those extensions are registered using the decorator `binapy_extension`.
+    Those extensions are registered using the decorators `binapy_encoder`, `binapy_decoder`, `binapy_checker`,
+    `binapy_serializer`, and `binapy_parser`.
     """
 
     def __new__(
@@ -20,7 +20,7 @@ class BinaPy(bytes):
         value: Union[bytes, str] = b"",
         encoding: str = "utf-8",
         errors: str = "strict",
-    ) -> BinaPy:
+    ) -> "BinaPy":
         """
         Overrides base method to accept a string with a default encoding of "utf-8".
         See Also:
@@ -44,7 +44,7 @@ class BinaPy(bytes):
         length: Optional[int] = None,
         byteorder: str = "big",
         signed: bool = False,
-    ) -> BinaPy:
+    ) -> "BinaPy":
         """
         Convert an `int` to a `BinaPy`. This is a wrapper around
         [int.to_bytes()](https://docs.python.org/3/library/stdtypes.html#int.to_bytes) and takes
@@ -82,7 +82,7 @@ class BinaPy(bytes):
         return int.from_bytes(self, byteorder, signed=signed)
 
     @classmethod
-    def random(cls, length: int) -> BinaPy:
+    def random(cls, length: int) -> "BinaPy":
         """
         Return a BinaPy containing `length` random bytes
         Args:
@@ -93,7 +93,7 @@ class BinaPy(bytes):
         """
         return cls(secrets.token_bytes(length))
 
-    def __getitem__(self, index: slice) -> BinaPy:  # type: ignore
+    def __getitem__(self, index: slice) -> "BinaPy":  # type: ignore
         """
         Override the base method so that slicing returns a BinaPy instead of just bytes.
         Args:
@@ -104,7 +104,7 @@ class BinaPy(bytes):
         """
         return self.__class__(super().__getitem__(index))
 
-    def __add__(self, other: bytes) -> BinaPy:
+    def __add__(self, other: bytes) -> "BinaPy":
         """
         Override base method so that addition returns a BinaPy instead of bytes.
         Args:
@@ -115,7 +115,7 @@ class BinaPy(bytes):
         """
         return self.__class__(super().__add__(other))
 
-    def __radd__(self, other: bytes) -> BinaPy:
+    def __radd__(self, other: bytes) -> "BinaPy":
         """
         Override base method so that right addition returns a BinaPy instead of bytes.
         Args:
@@ -126,7 +126,7 @@ class BinaPy(bytes):
         """
         return self.__class__(other.__add__(self))
 
-    def split(self, sep: Optional[bytes] = None, maxsplit: int = -1) -> List[BinaPy]:  # type: ignore[override]
+    def split(self, sep: Optional[bytes] = None, maxsplit: int = -1) -> "List[BinaPy]":  # type: ignore[override]
         """
         Override base method so that split() returns a BinaPy instead of bytes.
         Args:
@@ -138,7 +138,7 @@ class BinaPy(bytes):
         """
         return [self.__class__(b) for b in super().split(sep, maxsplit)]
 
-    def cut_at(self, *pos: int) -> List[BinaPy]:
+    def cut_at(self, *pos: int) -> "List[BinaPy]":
         """
         Cut this BinaPy at one or more integer positions.
         Args:
@@ -176,7 +176,7 @@ class BinaPy(bytes):
         return method
 
     @classmethod
-    def get_decoder(cls, extension_name: str) -> Callable[..., BinaPy]:
+    def get_decoder(cls, extension_name: str) -> "Callable[..., BinaPy]":
         extension_methods = cls.get_extension_methods(extension_name)
         method = extension_methods.get("decode")
         if method is None:
@@ -184,7 +184,7 @@ class BinaPy(bytes):
         return method
 
     @classmethod
-    def get_encoder(cls, extension_name: str) -> Callable[..., BinaPy]:
+    def get_encoder(cls, extension_name: str) -> "Callable[..., BinaPy]":
         extension_methods = cls.get_extension_methods(extension_name)
         method = extension_methods.get("encode")
         if method is None:
@@ -202,7 +202,7 @@ class BinaPy(bytes):
         return method
 
     @classmethod
-    def get_serializer(cls, extension_name: str) -> Callable[..., BinaPy]:
+    def get_serializer(cls, extension_name: str) -> "Callable[..., BinaPy]":
         extension_methods = cls.get_extension_methods(extension_name)
         method = extension_methods.get("serialize")
         if method is None:
@@ -211,7 +211,7 @@ class BinaPy(bytes):
             )
         return method
 
-    def encode_to(self, name: str, *args: Any, **kwargs: Any) -> BinaPy:
+    def encode_to(self, name: str, *args: Any, **kwargs: Any) -> "BinaPy":
         """
         Encodes data from this BinaPy according to the extension format `name`.
         Args:
@@ -226,7 +226,7 @@ class BinaPy(bytes):
 
         return encoder(self, *args, **kwargs)
 
-    def decode_from(self, name: str, *args: Any, **kwargs: Any) -> BinaPy:
+    def decode_from(self, name: str, *args: Any, **kwargs: Any) -> "BinaPy":
         """
         Decodes data from this BinaPy according to the format `name`.
         Args:
@@ -315,7 +315,7 @@ class BinaPy(bytes):
         return parser(self, *args, **kwargs)
 
     @classmethod
-    def serialize_to(cls, name: str, *args: Any, **kwargs: Any) -> BinaPy:
+    def serialize_to(cls, name: str, *args: Any, **kwargs: Any) -> "BinaPy":
         """
         Serialize (dump) data to a BinaPy, based on a given extension format.
         Args:
