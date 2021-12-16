@@ -18,8 +18,9 @@ To initialize a `BinaPy`:
 - from a `str`: `bp = BinaPy("my string", encoding='cp1252')`. If `encoding` is omitted, it will default to `'utf-8'`. That is a different to the `bytes` constructor where encoding is mandatory when you give it a `str` as value.
 - from a `bytearray`: `bp = BinaPy(bytearray(b'my bytearray data'))`
 - from an `int` array: bp = `BinaPy([109, 121, 32, 105, 110, 116, 32, 97, 114, 114, 97, 121])`
-- from an `int`: `bp = BinaPy.from_int(82412341)`. You may additionally pass `size`, `order`, and `signed` parameters, with the same semantics as [`int.to_bytes((length, byteorder, signed=False)`](https://docs.python.org/3/library/stdtypes.html#int.to_bytes)
+- from an `int`: `bp = BinaPy.from_int(82412341)`. You may additionally pass `size`, `order`, and `signed` parameters, with the same semantics as [`int.to_bytes((length, byteorder, signed=False)`](https://docs.python.org/3/library/stdtypes.html#int.to_bytes). You can do the opposite and convert an BinaPy to an int with `bp.to_int()`.
 - with random data, of arbitrary size: `bp = BinaPy.random(32)`. The parameter is the size of the generated data, in bytes.
+- from a string containing the binary representation of your data: `bp = BinaPy.from_binary_string('101010')`. The reverse transformation is available with `bp.to_binary_string()`.
 
 ## transform
 Extensions provide a fluent interface to apply transformations on a BinaPy. For example, to generate a random binary data, hash it with SHA256 then base64url encode the result:

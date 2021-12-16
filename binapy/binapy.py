@@ -96,6 +96,39 @@ class BinaPy(bytes):
         return int.from_bytes(self, byteorder, signed=signed)
 
     @classmethod
+    def from_binary_string(
+        cls, s: str, byteorder: Literal["little", "big"] = "big", signed: bool = False
+    ) -> "BinaPy":
+        """
+        Initializes a BinaPy based on a binary string (containing only 0 and 1).
+
+        Args:
+            s: a binary string
+            byteorder: byte order to use
+            signed: True if 2 complement is used to represent negative values
+
+        Returns:
+            a BinaPy
+        """
+        return cls(
+            int(s, 2).to_bytes((len(s) + 7) // 8, byteorder=byteorder, signed=signed)
+        )
+
+    def to_binary_string(
+        self, byteorder: Literal["little", "big"] = "big", signed: bool = False
+    ) -> str:
+        """
+        Returns a string containing this this BinaPy in binary representation.
+
+        Args:
+            byteorder: byte order to use
+            signed: True if 2 complement is used to represent negative values
+        Returns:
+            a string with containing only 0 and 1
+        """
+        return f"{self.to_int(byteorder, signed):b}"
+
+    @classmethod
     def random(cls, length: int) -> "BinaPy":
         """
         Return a BinaPy containing `length` random bytes
@@ -167,8 +200,8 @@ class BinaPy(bytes):
         """
         Override base method so that split() returns a BinaPy instead of bytes.
         Args:
-            sep:
-            maxsplit:
+            sep: a separator
+            maxsplit: the maximum number of splits
 
         Returns:
             a BinaPy
