@@ -107,7 +107,15 @@ class BinaPy(bytes):
         """
         return cls(secrets.token_bytes(length))
 
-    def __getitem__(self, index: slice) -> "BinaPy":  # type: ignore
+    @overload
+    def __getitem__(self, slice: int) -> int:
+        ...
+
+    @overload
+    def __getitem__(self, slice: slice) -> "BinaPy":
+        ...
+
+    def __getitem__(self, slice: Union[int, slice]) -> "Union[int, BinaPy]":
         """
         Override the base method so that slicing returns a BinaPy instead of just bytes.
         Args:
@@ -116,7 +124,22 @@ class BinaPy(bytes):
         Returns:
             A BinaPy
         """
-        return self.__class__(super().__getitem__(index))
+        if isinstance(slice, int):
+            return super().__getitem__(slice)
+        return self.__class__(super().__getitem__(slice))
+
+    def char_at(self, index: int) -> str:
+        """
+        Return the character at the given index.
+
+        Slicing a standard bytes returns an int. Sometimes what you really want is a single char string.
+        Args:
+            index:
+
+        Returns:
+            the single character at the given index
+        """
+        return chr(self[index])
 
     def __add__(self, other: bytes) -> "BinaPy":
         """
@@ -169,7 +192,7 @@ class BinaPy(bytes):
 
     extensions: Dict[str, Dict[str, Callable[..., Any]]] = {}
     """
-    Extension registry. New Extensions should be registered with `binapy_extension()`[binapy.binapy.binapy_extension].
+    Extension registry.
     """
 
     @classmethod

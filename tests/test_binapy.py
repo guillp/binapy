@@ -52,6 +52,18 @@ def test_binapy() -> None:
     assert BinaPy.serialize_to("json", JSON).parse_from("json") == JSON
 
 
+def test_slicing() -> None:
+    bp = BinaPy("1234567890")
+    assert bp[0] == ord("1")
+    assert bp[-1] == ord("0")
+    assert bp.char_at(0) == "1"
+    assert bp.char_at(-1) == "0"
+    assert bp[:] == bp
+    assert isinstance(bp[0], int)
+    assert isinstance(bp[:], BinaPy)
+    assert isinstance(bp.char_at(0), str)
+
+
 def test_helloworld() -> None:
     hello_world = b"Hello, World!"
     bp = BinaPy(hello_world).encode_to("gzip").encode_to("b64u")
