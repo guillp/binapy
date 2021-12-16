@@ -2,7 +2,19 @@
 
 import secrets
 from functools import wraps
-from typing import Any, Callable, Dict, Iterator, List, Optional, TypeVar, Union, cast
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 
 
 class BinaPy(bytes):
@@ -42,7 +54,7 @@ class BinaPy(bytes):
         cls,
         i: int,
         length: Optional[int] = None,
-        byteorder: str = "big",
+        byteorder: Literal["little", "big"] = "big",
         signed: bool = False,
     ) -> "BinaPy":
         """
@@ -65,7 +77,9 @@ class BinaPy(bytes):
         data = i.to_bytes(length, byteorder, signed=signed)
         return cls(data)
 
-    def to_int(self, byteorder: str = "big", signed: bool = False) -> int:
+    def to_int(
+        self, byteorder: Literal["little", "big"] = "big", signed: bool = False
+    ) -> int:
         """
         Convert this BinaPy to an `int`.
 
