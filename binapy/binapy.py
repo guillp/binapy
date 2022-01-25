@@ -77,6 +77,13 @@ class BinaPy(bytes):
         data = i.to_bytes(length, byteorder, signed=signed)
         return cls(data)
 
+    def ascii(self) -> str:
+        """
+        Convert this BinaPy to a str, making sure that only ascii characters are employed.
+        Returns: a str
+        """
+        return self.decode("ascii")
+
     def to_int(
         self, byteorder: Literal["little", "big"] = "big", signed: bool = False
     ) -> int:

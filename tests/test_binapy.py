@@ -25,6 +25,9 @@ def test_binapy() -> None:
     assert bp.encode_to("sha256").encode_to("b64") == BinaPy(SHA256).encode_to("b64")
     assert isinstance(bp[:], BinaPy)
     assert isinstance(bp[4:-2], BinaPy)
+    assert bp.encode_to("b64u").ascii() == "0m0nEH-psPRmnoXtQkslkw"
+    with pytest.raises(UnicodeError):
+        assert bp.ascii()
 
     assert not bp.check("b64")
     assert BinaPy(BASE64).check("b64")
