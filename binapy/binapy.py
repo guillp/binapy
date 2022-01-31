@@ -140,12 +140,27 @@ class BinaPy(bytes):
         """
         Return a BinaPy containing `length` random bytes
         Args:
-            length:
+            length: number of bytes to generate
 
         Returns:
             a BinaPy with randomly generated data
         """
         return cls(secrets.token_bytes(length))
+
+    @classmethod
+    def random_bits(cls, length: int) -> "BinaPy":
+        """
+        Return a BinaPy containing `length` random bits. Same as random(length//8).
+
+        Length must be a multiple of 8.
+
+        Args:
+            length: number of bits to randomly generate
+
+        Returns:
+            a BinaPy with randomly generated data
+        """
+        return cls(secrets.token_bytes(length // 8))
 
     @overload
     def __getitem__(self, slice: int) -> int:

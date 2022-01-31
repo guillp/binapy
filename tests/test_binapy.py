@@ -90,6 +90,10 @@ def test_random() -> None:
     assert len(bp) == 12
     assert bp != b"\00" * 12
 
+    bp = BinaPy.random_bits(192)
+    assert len(bp) == 192 // 8
+    assert bp != b"\00" * 24
+
 
 def test_unknown_features() -> None:
     bp = BinaPy.random(12)
