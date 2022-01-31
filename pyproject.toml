@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "binapy"
-version = "0.3.1"
+version = "0.3.2"
 homepage = "https://github.com/guillp/binapy"
 description = "Binary Data manipulation, for humans."
 authors = ["Guillaume Pujol <guill.p.linux@gmail.com>"]
