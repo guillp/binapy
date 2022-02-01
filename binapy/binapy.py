@@ -8,13 +8,14 @@ from typing import (
     Dict,
     Iterator,
     List,
-    Literal,
     Optional,
     TypeVar,
     Union,
     cast,
     overload,
 )
+
+from typing_extensions import Literal
 
 
 class BinaPy(bytes):
