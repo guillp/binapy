@@ -609,8 +609,9 @@ It also provides a few additional convenience methods such as <code>cut_at(*pos)
 <li>from a <code>str</code>: <code>bp = BinaPy("my string", encoding='cp1252')</code>. If <code>encoding</code> is omitted, it will default to <code>'utf-8'</code>. That is a different to the <code>bytes</code> constructor where encoding is mandatory when you give it a <code>str</code> as value.</li>
 <li>from a <code>bytearray</code>: <code>bp = BinaPy(bytearray(b'my bytearray data'))</code></li>
 <li>from an <code>int</code> array: bp = <code>BinaPy([109, 121, 32, 105, 110, 116, 32, 97, 114, 114, 97, 121])</code></li>
-<li>from an <code>int</code>: <code>bp = BinaPy.from_int(82412341)</code>. You may additionally pass <code>size</code>, <code>order</code>, and <code>signed</code> parameters, with the same semantics as <a href="https://docs.python.org/3/library/stdtypes.html#int.to_bytes"><code>int.to_bytes((length, byteorder, signed=False)</code></a></li>
+<li>from an <code>int</code>: <code>bp = BinaPy.from_int(82412341)</code>. You may additionally pass <code>size</code>, <code>order</code>, and <code>signed</code> parameters, with the same semantics as <a href="https://docs.python.org/3/library/stdtypes.html#int.to_bytes"><code>int.to_bytes((length, byteorder, signed=False)</code></a>. You can do the opposite and convert an BinaPy to an int with <code>bp.to_int()</code>.</li>
 <li>with random data, of arbitrary size: <code>bp = BinaPy.random(32)</code>. The parameter is the size of the generated data, in bytes.</li>
+<li>from a string containing the binary representation of your data: <code>bp = BinaPy.from_binary_string('101010')</code>. The reverse transformation is available with <code>bp.to_binary_string()</code>.</li>
 </ul>
 <h3 id="transform">transform<a class="headerlink" href="#transform" title="Permanent link">&para;</a></h3>
 <p>Extensions provide a fluent interface to apply transformations on a BinaPy. For example, to generate a random binary data, hash it with SHA256 then base64url encode the result:
