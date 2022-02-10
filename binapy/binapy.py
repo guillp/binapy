@@ -91,7 +91,8 @@ class BinaPy(bytes):
         """
         Convert this BinaPy to a str, making sure that only ascii characters are employed.
 
-        Returns: a str
+        Returns:
+            a str
         """
         return self.decode("ascii")
 
@@ -189,7 +190,7 @@ class BinaPy(bytes):
         Override the base method so that slicing returns a BinaPy instead of just bytes.
 
         Args:
-            index: an index
+            slice: a slice or index
 
         Returns:
             A BinaPy
@@ -401,10 +402,12 @@ class BinaPy(bytes):
         """
         Check if this BinaPy conforms to any of the registered extensions.
 
-        Returns: a list of extensions that this BinaPy can be decoded from.
+        Returns:
+             a list of extensions that this BinaPy can be decoded from.
 
         Args:
-            decode: if True, for extensions that don't have a checker method, try to decode this BinaPy using the decoder method to check if that works.
+            decode: if True, for extensions that don't have a checker method,
+            try to decode this BinaPy using the decoder method to check if that works.
         """
 
         def get_results() -> Iterator[str]:
