@@ -11,7 +11,6 @@ from typing import (
     List,
     Optional,
     Pattern,
-    SupportsIndex,
     TypeVar,
     Union,
     cast,
@@ -19,9 +18,9 @@ from typing import (
 )
 
 try:
-    from typing import Literal
+    from typing import Literal, SupportsIndex
 except ImportError:
-    from typing_extensions import Literal  # type: ignore
+    from typing_extensions import Literal, SupportsIndex  # type: ignore
 
 
 class BinaPy(bytes):
