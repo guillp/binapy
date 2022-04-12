@@ -375,35 +375,42 @@
         
           <li class="md-nav__item">
   <a href="#import" class="md-nav__link">
-    import
+    Import
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#initialize" class="md-nav__link">
-    initialize
+    Initialize
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#transform" class="md-nav__link">
-    transform
+  <a href="#encoding--decoding--transformations" class="md-nav__link">
+    Encoding / Decoding / Transformations
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#check" class="md-nav__link">
-    check
+  <a href="#converting-from-binary-to-text-or-numeric-data-types" class="md-nav__link">
+    Converting from binary to text or numeric data types
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#load-and-dump" class="md-nav__link">
-    load and dump
+  <a href="#checking-data-contents" class="md-nav__link">
+    Checking data contents
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loading-and-dumping" class="md-nav__link">
+    Loading and dumping
   </a>
   
 </li>
@@ -522,35 +529,42 @@
         
           <li class="md-nav__item">
   <a href="#import" class="md-nav__link">
-    import
+    Import
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#initialize" class="md-nav__link">
-    initialize
+    Initialize
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#transform" class="md-nav__link">
-    transform
+  <a href="#encoding--decoding--transformations" class="md-nav__link">
+    Encoding / Decoding / Transformations
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#check" class="md-nav__link">
-    check
+  <a href="#converting-from-binary-to-text-or-numeric-data-types" class="md-nav__link">
+    Converting from binary to text or numeric data types
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#load-and-dump" class="md-nav__link">
-    load and dump
+  <a href="#checking-data-contents" class="md-nav__link">
+    Checking data contents
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loading-and-dumping" class="md-nav__link">
+    Loading and dumping
   </a>
   
 </li>
@@ -587,15 +601,15 @@
   <h1>usage</h1>
 
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<h3 id="import">import<a class="headerlink" href="#import" title="Permanent link">&para;</a></h3>
+<h3 id="import">Import<a class="headerlink" href="#import" title="Permanent link">&para;</a></h3>
 <p>To use BinaPy in a project, import the main class like this:</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">binapy</span> <span class="kn">import</span> <span class="n">BinaPy</span>
 </code></pre></div>
 </td></tr></table>
 <p><code>BinaPy</code> is a subclass of Python's built-in <code>bytes</code>, so you can use it anywhere a <code>bytes</code> is required.
 You may also <code>.decode()</code> it to convert it to a <code>str</code>, or use any of the default methods from <a href="https://docs.python.org/3/library/stdtypes.html#bytes"><code>bytes</code></a>
-It also provides a few additional convenience methods such as <code>cut_at(*pos)</code></p>
-<h3 id="initialize">initialize<a class="headerlink" href="#initialize" title="Permanent link">&para;</a></h3>
+It also provides a few additional convenience methods, such as <code>cut_at(*pos)</code>, <code>.ascii()</code>, etc.</p>
+<h3 id="initialize">Initialize<a class="headerlink" href="#initialize" title="Permanent link">&para;</a></h3>
 <p>To initialize a <code>BinaPy</code>:</p>
 <ul>
 <li>from a <code>bytes</code>: <code>bp = BinaPy(b'my raw bytes \x01\xcf'</code>)</li>
@@ -606,17 +620,37 @@ It also provides a few additional convenience methods such as <code>cut_at(*pos)
 <li>with random data, of arbitrary size: <code>bp = BinaPy.random(32)</code>. The parameter is the size of the generated data, in bytes.</li>
 <li>from a string containing the binary representation of your data: <code>bp = BinaPy.from_binary_string('101010')</code>. The reverse transformation is available with <code>bp.to_binary_string()</code>.</li>
 </ul>
-<h3 id="transform">transform<a class="headerlink" href="#transform" title="Permanent link">&para;</a></h3>
-<p>Extensions provide a fluent interface to apply transformations on a BinaPy. For example, to generate a random binary data, hash it with SHA256 then base64url encode the result:
+<h3 id="encoding--decoding--transformations">Encoding / Decoding / Transformations<a class="headerlink" href="#encoding--decoding--transformations" title="Permanent link">&para;</a></h3>
+<p>Use the methods <code>encode_to()</code> (or its alias <code>.to()</code>) and <code>decode_from()</code> to transform a BinaPy value into another, using an encoding or transformation scheme. The result value
+being a BinaPy, you can keep applying those transformations fluently.</p>
+<p>For example, to generate a random binary data, hash it with SHA256 then Base64-url encode the result:
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">bp</span> <span class="o">=</span> <span class="n">BinaPy</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="o">.</span><span class="n">hash_sha256</span><span class="p">()</span><span class="o">.</span><span class="n">encode_b64u</span><span class="p">()</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">bp</span> <span class="o">=</span> <span class="n">BinaPy</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;sha256&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode_to</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
 <span class="c1"># b&#39;QTs64tuMZ-TnyYPhjopIryaFPeF26SKKN4y-su2sBYg&#39;</span>
 </code></pre></div>
 </td></tr></table></p>
-<p>Methods that handle encoding or decoding of data return another BinaPy, which makes it possible to chain calls with multiple transformations.</p>
-<h3 id="check">check<a class="headerlink" href="#check" title="Permanent link">&para;</a></h3>
+<p>To illustrate the <code>.decode_from()</code> method, lets Base64-url decode this value and convert it to hex:
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">decode_from</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;hex&quot;</span><span class="p">))</span>
+<span class="c1"># b&#39;413b3ae2db8c67e4e7c983e18e8a48af26853de176e9228a378cbeb2edac0588&#39;</span>
+</code></pre></div>
+</td></tr></table></p>
+<p>A few noteworthy remarks:</p>
+<ul>
+<li>some transformations, such as hashes, are irreversible, so they can only be used with the <code>encode_to()</code> method.</li>
+<li>the verb <em>encode</em> is not really suitable for hashes. That's one of the 2 reasons the <code>.to()</code> alias exists. The other reason is that it's shorter :)</li>
+<li>there is no <code>from()</code> alias to <code>decode_from()</code>. That's because <code>from</code> is a reversed word in Python, so it cannot be used as a method name. <code>from_()</code> could be used but it makes the code much uglier than <code>decode_from()</code>.</li>
+</ul>
+<h3 id="converting-from-binary-to-text-or-numeric-data-types">Converting from binary to text or numeric data types<a class="headerlink" href="#converting-from-binary-to-text-or-numeric-data-types" title="Permanent link">&para;</a></h3>
+<p><code>BinaPy</code> has a few convenience methods to convert a binary data into:</p>
+<ul>
+<li>a string: you can use <code>.decode()</code> as usual, with any Python-supported encoding as parameter. However, very often you will want to have a limited set of characters in the result. You can check this by using <code>.ascii()</code>, <code>.text()</code>, <code>.urlsafe()</code>, <code>.alphanumeric()</code></li>
+<li>an integer: use <code>.to_int()</code>, with optional parameters <code>byteorder</code> and <code>signed</code> with the same semantics as <a href="https://docs.python.org/3/library/stdtypes.html#int.from_bytes">int.from_bytes</a>.</li>
+<li>a binary string: use <code>.to_binary_string()</code>.</li>
+</ul>
+<h3 id="checking-data-contents">Checking data contents<a class="headerlink" href="#checking-data-contents" title="Permanent link">&para;</a></h3>
 <p>You can check if a BinaPy data conforms with a given extension using the <code>.check(name)</code> method.</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -649,16 +683,16 @@ or a base64url encoding.
 <span class="c1"># [&#39;b64&#39;, &#39;b64u&#39;, &#39;hex&#39;]</span>
 </code></pre></div>
 </td></tr></table></p>
-<h3 id="load-and-dump">load and dump<a class="headerlink" href="#load-and-dump" title="Permanent link">&para;</a></h3>
+<h3 id="loading-and-dumping">Loading and dumping<a class="headerlink" href="#loading-and-dumping" title="Permanent link">&para;</a></h3>
 <p>Dumping and encoding data can be done this way:
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">BinaPy</span><span class="o">.</span><span class="n">from_json</span><span class="p">({</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">encode_b64u</span><span class="p">()</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">BinaPy</span><span class="o">.</span><span class="n">serialize_to</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span>
 <span class="c1"># b&#39;ewoiZm9vIjogImJhciIKfQ&#39;</span>
 </code></pre></div>
 </td></tr></table>
 Loading serialized and encoded data can be done this way:
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">BinaPy</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;ewoiZm9vIjogImJhciIKfQ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode_b64u</span><span class="p">()</span><span class="o">.</span><span class="n">parse_json</span><span class="p">()</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">BinaPy</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;ewoiZm9vIjogImJhciIKfQ&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode_from</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">parse_from</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
 <span class="c1"># {&#39;foo&#39;: &#39;bar&#39;}</span>
 </code></pre></div>
 </td></tr></table></p>
@@ -672,7 +706,7 @@ Loading serialized and encoded data can be done this way:
 <li>a <em>serializer</em>: this will serialize data from another format into a BinaPy. E.g, a JSON dumper</li>
 </ul>
 <p>Note that the terms <em>encode</em> and <em>decode</em> are quite loose, because they are applied to compression, hashing and other transformations that produce or consume binary data.</p>
-<p>To implement such a method, use one of the <code>binapy_&lt;feature&gt;()</code> decorator. It takes the name of the extension as parameter.</p>
+<p>To implement such a method, use one of the <code>binapy_&lt;feature&gt;()</code> decorators. Each decorator takes the name of the extension as parameter.</p>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
 <span class="normal">3</span>
@@ -691,10 +725,9 @@ Loading serialized and encoded data can be done this way:
 <p>This <code>binapy_encoder()</code> decorator will:</p>
 <ul>
 <li>register this method in BinaPy extension registry, so that it can be called with <code>BinaPy(my_data).encode_to('myformat')</code>.</li>
-<li>add this method to BinaPy with a <code>setattr()</code>, so that it can be called with <code>BinaPy(my_data).encode_myformat()</code> (same name as the decorated method).</li>
 <li>if that methods returns a <code>bytes</code> or a <code>bytesarray</code>, make sure that it returns a <code>BinaPy</code> instead, to make sure it is fluent.</li>
 </ul>
-<p>Some formats such as <em>base64</em> can have all 3 methods implemented. Others such as hashes only have an encoder and checker method:</p>
+<p>Some formats such as <em>base64</em> can have all 3 methods implemented. Others such as hashes only have an encoder and a checker method:</p>
 <ul>
 <li>the encoder does the actual hashing (that is, by definition, irreversible)</li>
 <li>the checker method checks that a given data is the appropriate length for the given hash</li>

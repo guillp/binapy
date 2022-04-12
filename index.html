@@ -565,10 +565,10 @@
 <span class="normal">8</span>
 <span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">binapy</span> <span class="kn">import</span> <span class="n">BinaPy</span>
 
-<span class="n">bp</span> <span class="o">=</span> <span class="n">BinaPy</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">compress_gzip</span><span class="p">()</span><span class="o">.</span><span class="n">encode_b64u</span><span class="p">()</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="n">BinaPy</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;gzip&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
 <span class="c1"># b&#39;eJzzSM3JyddRCM8vyklRBAAfngRq&#39;</span>
-<span class="n">bp</span><span class="o">.</span><span class="n">decode_b64u</span><span class="p">()</span><span class="o">.</span><span class="n">decompress_gzip</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+<span class="n">bp</span><span class="o">.</span><span class="n">decode_from</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode_from</span><span class="p">(</span><span class="s2">&quot;gzip&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 <span class="c1"># &quot;Hello, World!&quot;</span>
 <span class="nb">isinstance</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
 <span class="c1"># True</span>
