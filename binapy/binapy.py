@@ -482,7 +482,7 @@ class BinaPy(bytes):
 
         Args:
             decode: if `True`, for extensions that don't have a checker method,
-            try to decode this BinaPy using the decoder method to check if that works.
+                try to decode this BinaPy using the decoder method to check if that works.
         """
 
         def get_results() -> Iterator[str]:
