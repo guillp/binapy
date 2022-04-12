@@ -597,6 +597,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#binapy.parsing" class="md-nav__link">
+    parsing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#binapy.compression" class="md-nav__link">
     compression
   </a>
@@ -606,13 +613,6 @@
           <li class="md-nav__item">
   <a href="#binapy.encoding" class="md-nav__link">
     encoding
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#binapy.parsing" class="md-nav__link">
-    parsing
   </a>
   
 </li>
@@ -916,6 +916,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#binapy.parsing" class="md-nav__link">
+    parsing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#binapy.compression" class="md-nav__link">
     compression
   </a>
@@ -925,13 +932,6 @@
           <li class="md-nav__item">
   <a href="#binapy.encoding" class="md-nav__link">
     encoding
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#binapy.parsing" class="md-nav__link">
-    parsing
   </a>
   
 </li>
@@ -1040,7 +1040,7 @@ Those extensions are registered using the decorators <code>binapy_encoder</code>
 <code>binapy_serializer</code>, and <code>binapy_parser</code>.</p>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 26</span>
 <span class="normal"> 27</span>
 <span class="normal"> 28</span>
@@ -1603,7 +1603,7 @@ Those extensions are registered using the decorators <code>binapy_encoder</code>
 <span class="sd">            i: the integer to convert to BinaPy</span>
 <span class="sd">            length: the length of the integer, in bytes. If omitted, takes the minimal length that fits the given integer.</span>
 <span class="sd">            byteorder: &quot;little&quot; or &quot;big&quot; (defaults to &quot;big&quot;)</span>
-<span class="sd">            signed: determines whether twoâ€™s complement is used to represent the integer.</span>
+<span class="sd">            signed: determines whether two’s complement is used to represent the integer.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            a BinaPy with the binary representation of the given integer</span>
@@ -1695,7 +1695,7 @@ Those extensions are registered using the decorators <code>binapy_encoder</code>
 
 <span class="sd">        Args:</span>
 <span class="sd">            byteorder: &quot;little&quot; or &quot;big&quot; (defaults to &quot;big&quot;)</span>
-<span class="sd">            signed: determines whether twoâ€™s complement is used to represent the integer. Default to False.</span>
+<span class="sd">            signed: determines whether two’s complement is used to represent the integer. Default to False.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            an integer based on this BinaPy binary value</span>
@@ -2008,7 +2008,7 @@ Those extensions are registered using the decorators <code>binapy_encoder</code>
 
 <span class="sd">        Args:</span>
 <span class="sd">            decode: if `True`, for extensions that don&#39;t have a checker method,</span>
-<span class="sd">            try to decode this BinaPy using the decoder method to check if that works.</span>
+<span class="sd">                try to decode this BinaPy using the decoder method to check if that works.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">get_results</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -2157,7 +2157,7 @@ Those extensions are registered using the decorators <code>binapy_encoder</code>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
@@ -2275,7 +2275,7 @@ takes the same parameters.</p>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>determines whether twoâ€™s complement is used to represent the integer.</p></td>
+          <td><p>determines whether two’s complement is used to represent the integer.</p></td>
           <td>
                 <code>False</code>
           </td>
@@ -2302,7 +2302,7 @@ takes the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
@@ -2349,7 +2349,7 @@ takes the same parameters.</p>
 <span class="sd">        i: the integer to convert to BinaPy</span>
 <span class="sd">        length: the length of the integer, in bytes. If omitted, takes the minimal length that fits the given integer.</span>
 <span class="sd">        byteorder: &quot;little&quot; or &quot;big&quot; (defaults to &quot;big&quot;)</span>
-<span class="sd">        signed: determines whether twoâ€™s complement is used to represent the integer.</span>
+<span class="sd">        signed: determines whether two’s complement is used to represent the integer.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        a BinaPy with the binary representation of the given integer</span>
@@ -2403,7 +2403,7 @@ takes the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">92</span>
 <span class="normal">93</span>
 <span class="normal">94</span>
@@ -2515,7 +2515,7 @@ takes the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -2627,7 +2627,7 @@ takes the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
@@ -2701,7 +2701,7 @@ takes the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
@@ -2764,7 +2764,7 @@ takes the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
@@ -2833,7 +2833,7 @@ the same parameters.</p>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>determines whether twoâ€™s complement is used to represent the integer. Default to False.</p></td>
+          <td><p>determines whether two’s complement is used to represent the integer. Default to False.</p></td>
           <td>
                 <code>False</code>
           </td>
@@ -2860,7 +2860,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
@@ -2890,7 +2890,7 @@ the same parameters.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        byteorder: &quot;little&quot; or &quot;big&quot; (defaults to &quot;big&quot;)</span>
-<span class="sd">        signed: determines whether twoâ€™s complement is used to represent the integer. Default to False.</span>
+<span class="sd">        signed: determines whether two’s complement is used to represent the integer. Default to False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        an integer based on this BinaPy binary value</span>
@@ -2983,7 +2983,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
@@ -3096,7 +3096,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">198</span>
 <span class="normal">199</span>
 <span class="normal">200</span>
@@ -3191,7 +3191,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">213</span>
 <span class="normal">214</span>
 <span class="normal">215</span>
@@ -3283,7 +3283,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
 <span class="normal">227</span>
 <span class="normal">228</span>
@@ -3378,7 +3378,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
@@ -3472,7 +3472,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
@@ -3565,7 +3565,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">277</span>
 <span class="normal">278</span>
 <span class="normal">279</span>
@@ -3654,7 +3654,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">289</span>
 <span class="normal">290</span>
 <span class="normal">291</span>
@@ -3753,7 +3753,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">301</span>
 <span class="normal">302</span>
 <span class="normal">303</span>
@@ -3844,7 +3844,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">314</span>
 <span class="normal">315</span>
 <span class="normal">316</span>
@@ -3967,7 +3967,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">388</span>
 <span class="normal">389</span>
 <span class="normal">390</span>
@@ -4084,7 +4084,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">404</span>
 <span class="normal">405</span>
 <span class="normal">406</span>
@@ -4197,7 +4197,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">418</span>
 <span class="normal">419</span>
 <span class="normal">420</span>
@@ -4314,7 +4314,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
@@ -4454,7 +4454,8 @@ the same parameters.</p>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>if <code>True</code>, for extensions that don't have a checker method,</p></td>
+          <td><p>if <code>True</code>, for extensions that don't have a checker method,
+try to decode this BinaPy using the decoder method to check if that works.</p></td>
           <td>
                 <code>False</code>
           </td>
@@ -4463,7 +4464,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">476</span>
 <span class="normal">477</span>
 <span class="normal">478</span>
@@ -4491,7 +4492,7 @@ the same parameters.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        decode: if `True`, for extensions that don&#39;t have a checker method,</span>
-<span class="sd">        try to decode this BinaPy using the decoder method to check if that works.</span>
+<span class="sd">            try to decode this BinaPy using the decoder method to check if that works.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">get_results</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -4588,7 +4589,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">496</span>
 <span class="normal">497</span>
 <span class="normal">498</span>
@@ -4705,7 +4706,7 @@ the same parameters.</p>
   </table>
 
         <details class="quote">
-          <summary>Source code in <code>binapy\binapy.py</code></summary>
+          <summary>Source code in <code>binapy/binapy.py</code></summary>
           <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">512</span>
 <span class="normal">513</span>
 <span class="normal">514</span>
@@ -4777,6 +4778,42 @@ the same parameters.</p>
 
 
 
+<h3 id="binapy.parsing" class="doc doc-heading">
+        <code>parsing</code>
+
+
+
+<a href="#binapy.parsing" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-module">
+
+
+
 <h3 id="binapy.compression" class="doc doc-heading">
         <code>compression</code>
 
@@ -4809,6 +4846,7 @@ the same parameters.</p>
 
 
 
+
   <div class="doc doc-object doc-module">
 
 
@@ -4828,43 +4866,6 @@ the same parameters.</p>
   <div class="doc doc-children">
 
 
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-  </div>
-
-
-
-
-  <div class="doc doc-object doc-module">
-
-
-
-<h3 id="binapy.parsing" class="doc doc-heading">
-        <code>parsing</code>
-
-
-
-<a href="#binapy.parsing" class="headerlink" title="Permanent link">&para;</a></h3>
-
-    <div class="doc doc-contents ">
-
-
-
-
-  <div class="doc doc-children">
 
 
 
