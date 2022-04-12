@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Tests for `binapy` package."""
+import string
 
 import pytest
 
@@ -22,7 +23,7 @@ def test_binapy() -> None:
     sha256 = bp.encode_to("sha256")
     assert isinstance(sha256, BinaPy)
     assert sha256 == SHA256
-    assert bp.encode_to("sha256").encode_to("b64") == BinaPy(SHA256).encode_to("b64")
+    assert bp.to("sha256").to("b64") == BinaPy(SHA256).to("b64")
     assert isinstance(bp[:], BinaPy)
     assert isinstance(bp[4:-2], BinaPy)
     assert bp.encode_to("b64u").ascii() == "0m0nEH-psPRmnoXtQkslkw"
@@ -130,3 +131,17 @@ def test_exceptions() -> None:
     bp = BinaPy()
     assert bp.check("other_feature") is False
     assert bp.check("other_feature", decode=True) is False
+
+
+def test_str() -> None:
+    ascii_safe_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+    assert BinaPy(ascii_safe_chars, "ascii").ascii() == ascii_safe_chars
+
+    with pytest.raises(ValueError):
+        BinaPy(b"\x01").text()
+
+    with pytest.raises(ValueError):
+        BinaPy(b"noturlsafe/").urlsafe()
+
+    with pytest.raises(ValueError):
+        BinaPy("notalphanumeric!").alphanumeric()
