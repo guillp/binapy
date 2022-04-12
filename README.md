@@ -15,10 +15,10 @@ With BinaPy, encoding or decoding data in a number of formats (base64, base64url
 ```python
 from binapy import BinaPy
 
-bp = BinaPy("Hello, World!").compress_gzip().encode_b64u()
+bp = BinaPy("Hello, World!").to("gzip").to("b64u")
 print(bp)
 # b'eJzzSM3JyddRCM8vyklRBAAfngRq'
-bp.decode_b64u().decompress_gzip().decode()
+bp.decode_from("b64u").decode_from("gzip").decode()
 # "Hello, World!"
 isinstance(bp, bytes)
 # True
