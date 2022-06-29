@@ -21,13 +21,12 @@ def from_json(
     data: Any,
     compact: bool = True,
     default_encoder: Callable[[Any], Any] = _default_json_encode,
+    **kwargs: Any
 ) -> bytes:
     if compact:
-        separators = (",", ":")
-        indent = None
+        kwargs.setdefault("separators", (",", ":"))
+        kwargs.setdefault("indent", None)
     else:
-        separators = (", ", ": ")
-        indent = 2
-    return json.dumps(
-        data, separators=separators, indent=indent, default=default_encoder
-    ).encode()
+        kwargs.setdefault("separators", (", ", ": "))
+        kwargs.setdefault("indent", 2)
+    return json.dumps(data, default=default_encoder, **kwargs).encode()
