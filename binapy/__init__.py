@@ -16,3 +16,12 @@ from .compression import *
 from .encoding import *
 from .hashing import *
 from .parsing import *
+
+__all__ = [
+    "BinaPy",
+    "binapy_checker",
+    "binapy_decoder",
+    "binapy_encoder",
+    "binapy_parser",
+    "binapy_serializer",
+]
