@@ -70,9 +70,9 @@ def test_slicing() -> None:
 
 def test_helloworld() -> None:
     hello_world = b"Hello, World!"
-    bp = BinaPy(hello_world).encode_to("gzip").encode_to("b64u")
+    bp = BinaPy(hello_world).encode_to("zlib").encode_to("b64u")
     assert bp == b"eJzzSM3JyddRCM8vyklRBAAfngRq"
-    assert bp.decode_from("b64u").decode_from("gzip") == hello_world
+    assert bp.decode_from("b64u").decode_from("zlib") == hello_world
 
 
 def test_int() -> None:

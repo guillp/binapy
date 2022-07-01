@@ -1,1 +1,1 @@
-from .gzip import *
+from .zlib import *
