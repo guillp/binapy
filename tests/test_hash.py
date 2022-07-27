@@ -62,13 +62,17 @@ def test_sha(alg: str, append_salt: Optional[bool], hexhash: str) -> None:
     data = BinaPy("my_data")
     salt = BinaPy(b"my_salt")
 
-    if append_salt is True:
-        bp = data.encode_to(alg, salt)
-    elif append_salt is False:
-        bp = data.encode_to(alg, salt, False)
-    elif append_salt is None:
+    if append_salt is None:
         bp = data.encode_to(alg)
+    else:
+        bp = data.encode_to(alg, salt, append_salt)
+
     assert bp.hex() == hexhash
+
+    if append_salt is None:
+        assert bp.check(alg)
+    else:
+        assert (bp + salt).check(alg)
 
 
 @pytest.mark.parametrize(
@@ -104,6 +108,18 @@ def test_sha(alg: str, append_salt: Optional[bool], hexhash: str) -> None:
             512,
             "6025dc4128b18c52855dfcfbd40102236acabfa6d4958d49cb7cf0d4710f6b3daac7a73b357c6815a76c25aa631299be2d786b157dee4ddcd1c522a77c1edba1",
         ),
+        (
+            "sshake128",
+            False,
+            256,
+            "4428a650cb7067900b518a2b7e45304131327f28450b81fd991a5f4eede853d5",
+        ),
+        (
+            "sshake256",
+            False,
+            512,
+            "5e1c64356ffe5f085da56b3570d249eff55425565dfa42320d37521c8bd8b707bf550d639675546cda872cb8435beb66e1b1b905795ccb9b78013fbe6e2fe1ea",
+        ),
     ),
 )
 def test_shake(
@@ -117,3 +133,11 @@ def test_shake(
     else:
         bp = data.encode_to(alg, length, salt, append_salt)
     assert bp.hex() == hexhash
+
+
+def test_invalid_shake_length() -> None:
+    with pytest.raises(ValueError):
+        BinaPy("foo").to("shake128", 257)
+
+    with pytest.raises(ValueError):
+        BinaPy("foo").to("sshake128", 257, b"salt")

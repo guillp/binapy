@@ -10,7 +10,7 @@ from binapy import binapy_checker, binapy_encoder
 
 class ShakeProtocol(Protocol):  # noqa: D101
     def digest(self, length: int) -> bytes:  # noqa: D102
-        ...
+        ...  # pragma: no cover
 
 
 def shake_hash(func: Callable[[bytes], ShakeProtocol], bp: bytes, length: int) -> bytes:

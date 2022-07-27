@@ -19,6 +19,11 @@ def test_deflate() -> None:
         b"hnContext>\r\n</samlp:AuthnRequest>"
     )
 
+    assert (
+        BinaPy("<this_is_a_test/>").to("deflate").to("hex")
+        == b"b329c9c82c8e07a2c4f892d4e2127d3b00"
+    )
+
 
 def test_zlib() -> None:
     assert (

@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 
 from binapy import BinaPy
@@ -10,7 +11,7 @@ def test_json() -> None:
     assert data == {"hello": "world"}
 
 
-def test_json_datetime() -> None:
+def test_json_encoder() -> None:
     """Datetimes are serialized to integer epoch timestamps, but integer stay integers when
     parsed."""
     bp = BinaPy.serialize_to(
@@ -24,9 +25,28 @@ def test_json_datetime() -> None:
                 minute=26,
                 second=40,
                 tzinfo=timezone(timedelta(seconds=0)),
-            )
+            ),
+            "foo": uuid.UUID("71509952-ec4f-4854-84e7-fa452994b51d"),
         },
+        sort_keys=True,
     )
-    assert bp == b'{"iat":1600000000}'
+    assert bp == b'{"foo":"71509952-ec4f-4854-84e7-fa452994b51d","iat":1600000000}'
 
-    assert bp.parse_from("json") == {"iat": 1600000000}
+    assert bp.parse_from("json") == {
+        "iat": 1600000000,
+        "foo": "71509952-ec4f-4854-84e7-fa452994b51d",
+    }
+
+
+def test_compact() -> None:
+    bp = BinaPy.serialize_to("json", {"a": "b", "c": "d"}, sort_keys=True, compact=True)
+    assert bp == b'{"a":"b","c":"d"}'
+    bp = BinaPy.serialize_to(
+        "json", {"a": "b", "c": "d"}, sort_keys=True, compact=False
+    )
+    assert bp == b'{\n  "a": "b", \n  "c": "d"\n}'
+
+    bp = BinaPy.serialize_to(
+        "json", {"a": "b", "c": "d"}, sort_keys=True, compact=False, indent=4
+    )
+    assert bp == b'{\n    "a": "b", \n    "c": "d"\n}'

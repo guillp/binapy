@@ -14,7 +14,7 @@ from binapy import binapy_checker, binapy_encoder
 
 class ShaProtocol(Protocol):  # noqa: D101
     def digest(self) -> bytes:  # noqa: D102
-        ...
+        ...  # pragma: no cover
 
 
 def sha_hash(func: Callable[[bytes], ShaProtocol], bp: bytes) -> bytes:
@@ -54,7 +54,7 @@ for alg, func, length in (
 ):
     # see why we need to use functools: https://stackoverflow.com/questions/3431676/creating-functions-in-a-loop
     binapy_encoder(alg)(functools.partial(sha_hash, func))
-    binapy_checker(alg)(functools.partial(is_sha_hash, lengnth=length))
+    binapy_checker(alg)(functools.partial(is_sha_hash, length))
 
 
 def salted_sha_hash(

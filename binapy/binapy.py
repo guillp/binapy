@@ -112,11 +112,9 @@ class BinaPy(bytes):
             ValueError: if the decoded str doesn't match `pattern`
         """
         res = self.decode(encoding)
-        if pattern:
-            if re.match(pattern, res):
-                return res
-            raise ValueError(f"This value doesn't match pattern {pattern}")
-        return res
+        if re.match(pattern, res):
+            return res
+        raise ValueError(f"This value doesn't match pattern {pattern}")
 
     def text(self, encoding: str = "ascii") -> str:
         r"""Decode this BinaPy to a str, and check that the result is printable.
@@ -175,6 +173,8 @@ class BinaPy(bytes):
     ) -> "BinaPy":
         """Initialize a BinaPy based on a binary string (containing only 0 and 1).
 
+        The string may contain spaces or tabs characters which will be ignored.
+
         Args:
             s: a binary string
             byteorder: byte order to use
@@ -183,23 +183,32 @@ class BinaPy(bytes):
         Returns:
             a BinaPy
         """
+        s = s.replace(" ", "").replace("\t", "")
         return cls(
             int(s, 2).to_bytes((len(s) + 7) // 8, byteorder=byteorder, signed=signed)
         )
 
     def to_binary_string(
-        self, byteorder: Literal["little", "big"] = "big", signed: bool = False
+        self,
+        byteorder: Literal["little", "big"] = "big",
+        signed: bool = False,
+        pad: bool = True,
     ) -> str:
         """Return a string containing this BinaPy value in binary representation.
 
         Args:
             byteorder: byte order to use
-            signed: True if 2 complement is used to represent negative values
+            signed: `True` if 2 complement is used to represent negative values
+            pad: if `True`, left pad the result with 0 to make length a multiple of 8
 
         Returns:
             a string with containing only 0 and 1
         """
-        return format(self.to_int(byteorder, signed), "b")
+        binary = format(self.to_int(byteorder, signed), "b")
+        if pad and len(binary) % 8:
+            d = len(binary) // 8
+            return binary.rjust(8 * d + 8, "0")
+        return binary
 
     @classmethod
     def random(cls, length: int) -> "BinaPy":
@@ -229,11 +238,11 @@ class BinaPy(bytes):
 
     @overload
     def __getitem__(self, index: SupportsIndex) -> int:  # noqa: D105
-        ...
+        ...  # pragma: no cover
 
     @overload
     def __getitem__(self, slice: slice) -> "BinaPy":  # noqa: D105
-        ...
+        ...  # pragma: no cover
 
     def __getitem__(self, slice: Union[slice, SupportsIndex]) -> "Union[int, BinaPy]":
         """Override the base method so that slicing returns a BinaPy instead of just bytes.
@@ -322,7 +331,7 @@ class BinaPy(bytes):
     def _get_extension_methods(cls, name: str) -> Dict[str, Callable[..., Any]]:
         extension = cls.extensions.get(name)
         if extension is None:
-            raise ValueError(f"Extension {name} not found")
+            raise NotImplementedError(f"Extension {name} not found")
         return extension
 
     @classmethod
@@ -330,7 +339,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("check")
         if method is None:
-            raise ValueError(
+            raise NotImplementedError(
                 f"Extension {extension_name} doesn't have a checker method"
             )
         return method
@@ -340,7 +349,9 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("decode")
         if method is None:
-            raise ValueError(f"Extension {extension_name} doesn't have a decode method")
+            raise NotImplementedError(
+                f"Extension {extension_name} doesn't have a decode method"
+            )
         return method
 
     @classmethod
@@ -348,7 +359,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("encode")
         if method is None:
-            raise ValueError(
+            raise NotImplementedError(
                 f"Extension {extension_name} doesn't have an encode method"
             )
         return method
@@ -358,7 +369,9 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("parse")
         if method is None:
-            raise ValueError(f"Extension {extension_name} doesn't have a parse method")
+            raise NotImplementedError(
+                f"Extension {extension_name} doesn't have a parse method"
+            )
         return method
 
     @classmethod
@@ -366,7 +379,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("serialize")
         if method is None:
-            raise ValueError(
+            raise NotImplementedError(
                 f"Extension {extension_name} doesn't have a serialize method"
             )
         return method
@@ -434,11 +447,13 @@ class BinaPy(bytes):
             checker = self._get_checker(name)
             try:
                 return checker(self)
+            except InvalidExtensionMethod as exc:
+                raise exc
             except Exception as exc:
                 if raise_on_error:
                     raise exc from exc
                 return False
-        except ValueError:
+        except NotImplementedError:
             try:
                 decoder = self._get_decoder(name)
                 # if checker is not implemented and decode is True, try to decode instead
@@ -450,7 +465,7 @@ class BinaPy(bytes):
                         if raise_on_error:
                             raise exc from exc
                         return False
-            except ValueError:
+            except NotImplementedError:
                 return False
         return False
 
@@ -522,6 +537,10 @@ class BinaPy(bytes):
 F = TypeVar("F", bound=Callable[..., Any])
 
 
+class InvalidExtensionMethod(ValueError):
+    """Raised when an extension method returns invalid data."""
+
+
 def binapy_encoder(name: str) -> Callable[[F], F]:
     """Declare new encoders for BinaPy.
 
@@ -554,7 +573,7 @@ def binapy_encoder(name: str) -> Callable[[F], F]:
         def wrapper(*args: Any, **kwargs: Any) -> BinaPy:
             raw_result = func(*args, **kwargs)
             if not isinstance(raw_result, (bytes, bytearray, str)):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} encoder method did not return binary data"
                 )
             return BinaPy(raw_result)
@@ -599,7 +618,7 @@ def binapy_decoder(name: str) -> Callable[[F], F]:  # noqa: D401
         def wrapper(*args: Any, **kwargs: Any) -> BinaPy:
             raw_result = func(*args, **kwargs)
             if not isinstance(raw_result, (bytes, bytearray)):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} decoder method did not return binary data"
                 )
             return BinaPy(raw_result)
@@ -643,7 +662,7 @@ def binapy_checker(name: str) -> Callable[[F], F]:
             raw_result = func(*args, **kwargs)
 
             if not isinstance(raw_result, bool):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} checker method did not return boolean data"
                 )
             return raw_result
@@ -672,7 +691,7 @@ def binapy_serializer(name: str) -> Callable[[F], F]:
         def wrapper(*args: Any, **kwargs: Any) -> BinaPy:
             raw_result = func(*args, **kwargs)
             if not isinstance(raw_result, (bytes, bytearray)):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} serializer method did not return binary data"
                 )
             return BinaPy(raw_result)
