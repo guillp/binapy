@@ -56,14 +56,9 @@ from binapy import BinaPy
             False,
             "cce5acf40a1d921ca6b3bdb1cc3136ff941f81d9207f57e80329633668086eb858c4de70ccd82ec93e42d75c2d63c8cae081ec4a1599bce9809626404e7e9f31",
         ),
-        (
-            "shake128",
-            None,
-            "b0a8e0020f42c2a7302f817f64cacc432b9e4cb890349c1a3c443e0bc711bd30",
-        ),
     ),
 )
-def test_hashes(alg: str, append_salt: Optional[bool], hexhash: str) -> None:
+def test_sha(alg: str, append_salt: Optional[bool], hexhash: str) -> None:
     data = BinaPy("my_data")
     salt = BinaPy(b"my_salt")
 
@@ -73,4 +68,52 @@ def test_hashes(alg: str, append_salt: Optional[bool], hexhash: str) -> None:
         bp = data.encode_to(alg, salt, False)
     elif append_salt is None:
         bp = data.encode_to(alg)
+    assert bp.hex() == hexhash
+
+
+@pytest.mark.parametrize(
+    "alg, append_salt, length, hexhash",
+    (
+        (
+            "shake128",
+            None,
+            256,
+            "b0a8e0020f42c2a7302f817f64cacc432b9e4cb890349c1a3c443e0bc711bd30",
+        ),
+        (
+            "shake256",
+            None,
+            512,
+            "1f5f2f3e83df1a34a8a9525e92d0d10d1ee0da210ab445721f6c0684598a0f86dcd8d63c70f171ad1cf7b785ff044222f1165a5ebb307394e229d307aa0f419e",
+        ),
+        (
+            "sshake128",
+            True,
+            256,
+            "4a02381107dcafbe77c580c2e6b230e386575b426a116d41d2f43b4209de7e8c",
+        ),
+        (
+            "sshake128",
+            True,
+            1024,
+            "4a02381107dcafbe77c580c2e6b230e386575b426a116d41d2f43b4209de7e8c972dd3256091ffc825cddb3c02c330ec49a74d29ca28c6bde32a42a57050e2b2868c37a6548116ef9724821f1ede7527746b0493d313ac1592bc2b4b3bfafb6f73e77623e5ee2a9e40ae8ab4eea4e5b31f59f5f502ad9e5c7a922ab40da70b89",
+        ),
+        (
+            "sshake256",
+            True,
+            512,
+            "6025dc4128b18c52855dfcfbd40102236acabfa6d4958d49cb7cf0d4710f6b3daac7a73b357c6815a76c25aa631299be2d786b157dee4ddcd1c522a77c1edba1",
+        ),
+    ),
+)
+def test_shake(
+    alg: str, append_salt: Optional[bool], length: int, hexhash: str
+) -> None:
+    data = BinaPy("my_data")
+    salt = BinaPy(b"my_salt")
+
+    if append_salt is None:
+        bp = data.encode_to(alg, length)
+    else:
+        bp = data.encode_to(alg, length, salt, append_salt)
     assert bp.hex() == hexhash

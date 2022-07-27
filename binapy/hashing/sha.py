@@ -1,99 +1,102 @@
+"""This module contains helper methods for the SHA family of hash methods.
+
+Those include SHA1, SHA256, etc.
+"""
+
+import functools
 import hashlib
+from typing import Callable, Protocol
 
 from binapy import binapy_checker, binapy_encoder
 
 
-@binapy_encoder("sha1")
-def hash_sha1(bp: bytes) -> bytes:
-    return hashlib.sha1(bp).digest()
+class ShaProtocol(Protocol):  # noqa: D101
+    def digest(self) -> bytes:  # noqa: D102
+        ...
 
 
-@binapy_checker("sha1")
-def is_sha1(bp: bytes) -> bool:
-    return len(bp) == 20
+def sha_hash(func: Callable[[bytes], ShaProtocol], bp: bytes) -> bytes:
+    """Calculate a SHA hash for a data.
+
+    Args:
+        func: the `hashlib` method to use for hashing
+        bp: the data to hash
+
+    Returns:
+        the calculated hash
+    """
+    return func(bp).digest()
 
 
-@binapy_encoder("ssha1")
-def hash_ssha1(bp: bytes, salt: bytes, append: bool = True) -> bytes:
+def is_sha_hash(length: int, bp: bytes) -> bool:
+    """Check if a data can be a SHA hash.
+
+    Check is made based on the data length. Since SHA algorithms produce a fixed length hash, this is an easy check.
+    Note that it is not because a data is the appropriate length that it has been produced by a SHA hash!
+
+    Args:
+        length: the expected length for data to be considered a SHA hash.
+        bp: the data to check
+
+    Returns:
+        `True` if data has the appropriate length
+    """
+    return len(bp) == length
+
+
+for alg, func, length in (
+    ("sha1", hashlib.sha1, 20),
+    ("sha256", hashlib.sha256, 32),
+    ("sha384", hashlib.sha384, 48),
+    ("sha512", hashlib.sha512, 64),
+):
+    # see why we need to use functools: https://stackoverflow.com/questions/3431676/creating-functions-in-a-loop
+    binapy_encoder(alg)(functools.partial(sha_hash, func))
+    binapy_checker(alg)(functools.partial(is_sha_hash, lengnth=length))
+
+
+def salted_sha_hash(
+    func: Callable[[bytes], ShaProtocol], bp: bytes, salt: bytes, append: bool = True
+) -> bytes:
+    """Calculate a salted SHA.
+
+    Args:
+        func: the hash method from `hashlib` to use
+        bp: the data to hash
+        salt: the salt to use
+        append: if `True`, salt will be appended to data. If `False`, it will be prepended.
+
+    Returns:
+        the calculated hash
+    """
     if append:
         salted = bp + salt
     else:
         salted = salt + bp
-    return hashlib.sha1(salted).digest()
+    return func(salted).digest()
 
 
-@binapy_checker("ssha1")
-def is_ssha1(bp: bytes) -> bool:
-    return 20 < len(bp) < 40
+def is_salted_sha_hash(min_len: int, max_len: int, bp: bytes) -> bool:
+    """Check if a `bytes` value can be a salted SHA hash.
+
+    Check is done based on the data length.
+
+    Args:
+        min_len: minimum length for data to be considered a salted SHA
+        max_len: max length for data to be considered a salted SHA
+        bp: the data to check
+
+    Returns:
+        `True` if `min_len < len(bp) < max_len)
+    """
+    return min_len < len(bp) < max_len
 
 
-@binapy_encoder("sha256")
-def hash_sha256(bp: bytes) -> bytes:
-    return hashlib.sha256(bp).digest()
-
-
-@binapy_checker("sha256")
-def is_sha256(bp: bytes) -> bool:
-    return len(bp) == 256 / 8
-
-
-@binapy_encoder("sha384")
-def hash_sha384(bp: bytes) -> bytes:
-    return hashlib.sha384(bp).digest()
-
-
-@binapy_checker("sha384")
-def is_sha384(bp: bytes) -> bool:
-    return len(bp) == 384 / 8
-
-
-@binapy_encoder("sha512")
-def hash_sha512(bp: bytes) -> bytes:
-    return hashlib.sha512(bp).digest()
-
-
-@binapy_checker("sha512")
-def is_sha512(bp: bytes) -> bool:
-    return len(bp) == 512 / 8
-
-
-@binapy_encoder("ssha256")
-def hash_ssha256(bp: bytes, salt: bytes, append: bool = True) -> bytes:
-    if append:
-        salted = bp + salt
-    else:
-        salted = salt + bp
-    return hashlib.sha256(salted).digest()
-
-
-@binapy_checker("ssha256")
-def is_ssha256(bp: bytes) -> bool:
-    return 32 < len(bp) < 64
-
-
-@binapy_encoder("ssha384")
-def hash_ssha384(bp: bytes, salt: bytes, append: bool = True) -> bytes:
-    if append:
-        salted = bp + salt
-    else:
-        salted = salt + bp
-    return hashlib.sha384(salted).digest()
-
-
-@binapy_checker("ssha384")
-def is_ssha384(bp: bytes) -> bool:
-    return 48 < len(bp) < 96
-
-
-@binapy_encoder("ssha512")
-def hash_ssha512(bp: bytes, salt: bytes, append: bool = True) -> bytes:
-    if append:
-        salted = bp + salt
-    else:
-        salted = salt + bp
-    return hashlib.sha512(salted).digest()
-
-
-@binapy_checker("ssha512")
-def is_ssha512(bp: bytes) -> bool:
-    return 64 < len(bp) < 128
+for alg, func, min_length, max_length in (
+    ("ssha1", hashlib.sha1, 20, 40),
+    ("ssha256", hashlib.sha256, 32, 64),
+    ("ssha384", hashlib.sha384, 48, 96),
+    ("ssha512", hashlib.sha512, 64, 128),
+):
+    binapy_encoder(alg)(functools.partial(salted_sha_hash, func))
+    binapy_checker(alg)(functools.partial(is_salted_sha_hash, min_length, max_length))

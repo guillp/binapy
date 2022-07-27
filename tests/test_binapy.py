@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 """Tests for `binapy` package."""
-import string
 
 import pytest
 

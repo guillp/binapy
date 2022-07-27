@@ -11,7 +11,8 @@ def test_json() -> None:
 
 
 def test_json_datetime() -> None:
-    """Datetimes are serialized to integer epoch timestamps, but integer stay integers when parsed."""
+    """Datetimes are serialized to integer epoch timestamps, but integer stay integers when
+    parsed."""
     bp = BinaPy.serialize_to(
         "json",
         {

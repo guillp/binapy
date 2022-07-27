@@ -1,6 +1,6 @@
-* BinaPy version:
-* Python version:
-* Operating System:
+- BinaPy version:
+- Python version:
+- Operating System:
 
 ### Description
 

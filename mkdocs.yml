@@ -51,6 +51,15 @@ plugins:
   - mkdocstrings:
       watch:
         - binapy
+      handlers:
+        python:
+          options:
+            filters:
+              - "!^_"
+              - "^__init__"
+            members_order: source
+            show_root_heading: true
+            heading_level: 2
 extra:
   social:
     - icon: fontawesome/brands/github
