@@ -4,7 +4,14 @@ import string
 
 import pytest
 
-from binapy import BinaPy, binapy_decoder
+from binapy import (
+    BinaPy,
+    InvalidExtensionMethod,
+    binapy_checker,
+    binapy_decoder,
+    binapy_encoder,
+    binapy_serializer,
+)
 
 BINARY = b"\xd2m'\x10\x7f\xa9\xb0\xf4f\x9e\x85\xedBK%\x93"
 BASE64 = b"0m0nEH+psPRmnoXtQkslkw=="
@@ -70,9 +77,9 @@ def test_slicing() -> None:
 
 def test_helloworld() -> None:
     hello_world = b"Hello, World!"
-    bp = BinaPy(hello_world).encode_to("gzip").encode_to("b64u")
+    bp = BinaPy(hello_world).encode_to("zlib").encode_to("b64u")
     assert bp == b"eJzzSM3JyddRCM8vyklRBAAfngRq"
-    assert bp.decode_from("b64u").decode_from("gzip") == hello_world
+    assert bp.decode_from("b64u").decode_from("zlib") == hello_world
 
 
 def test_int() -> None:
@@ -98,19 +105,19 @@ def test_random() -> None:
 
 def test_unknown_features() -> None:
     bp = BinaPy.random(12)
-    with pytest.raises(ValueError):
+    with pytest.raises(NotImplementedError):
         bp.encode_to("something_not_known")
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NotImplementedError):
         bp.decode_from("something_not_known")
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NotImplementedError):
         bp.check("something_not_known")
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NotImplementedError):
         bp.parse_from("something_not_known")
 
-    with pytest.raises(ValueError):
+    with pytest.raises(NotImplementedError):
         BinaPy.serialize_to("something_not_known", {"foo": "bar"})
 
 
@@ -132,10 +139,27 @@ def test_exceptions() -> None:
     assert bp.check("other_feature") is False
     assert bp.check("other_feature", decode=True) is False
 
+    with pytest.raises(ValueError):
+        bp.check("other_feature", decode=True, raise_on_error=True)
+
+    with pytest.raises(NotImplementedError):
+        bp.encode_to("other_feature", "foo")
+
+    with pytest.raises(NotImplementedError):
+        bp.parse_from("other_feature", "foo")
+
+    with pytest.raises(NotImplementedError):
+        bp.serialize_to("other_feature", "foo")
+
+    with pytest.raises(NotImplementedError):
+        bp.parse_from("other_feature", "foo")
+
 
 def test_str() -> None:
     ascii_safe_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
     assert BinaPy(ascii_safe_chars, "ascii").ascii() == ascii_safe_chars
+
+    assert BinaPy(string.ascii_letters + string.digits).re_match(r"[a-zA-Z0-9]")
 
     with pytest.raises(ValueError):
         BinaPy(b"\x01").text()
@@ -145,3 +169,59 @@ def test_str() -> None:
 
     with pytest.raises(ValueError):
         BinaPy("notalphanumeric!").alphanumeric()
+
+
+def test_binary_string() -> None:
+    assert (
+        BinaPy.from_binary_string(
+            "01110100 01101000 01101001 01110011 00100000 01101001 01110011 00100000 01100001 00100000 01110100 01100101 01110011 01110100"
+        )
+        == b"this is a test"
+    )
+    assert (
+        BinaPy(b"this is a test").to_binary_string()
+        == "0111010001101000011010010111001100100000011010010111001100100000011000010010000001110100011001010111001101110100"
+    )
+    assert (
+        BinaPy(b"this is a test").to_binary_string(pad=False)
+        == "111010001101000011010010111001100100000011010010111001100100000011000010010000001110100011001010111001101110100"
+    )
+
+
+def test_invalid_features() -> None:
+    @binapy_decoder("foo")
+    def decode(bp: BinaPy) -> BinaPy:
+        return 1  # type: ignore[return-value]
+
+    with pytest.raises(InvalidExtensionMethod):
+        BinaPy("foo").decode_from("foo")
+
+    @binapy_encoder("foo")
+    def encode(bp: BinaPy) -> BinaPy:
+        return 1  # type: ignore[return-value]
+
+    with pytest.raises(InvalidExtensionMethod):
+        BinaPy("foo").to("foo")
+
+    @binapy_checker("foo")
+    def check(bp: BinaPy) -> BinaPy:
+        return "whatever"  # type: ignore[return-value]
+
+    with pytest.raises(InvalidExtensionMethod):
+        BinaPy("foo").check("foo")
+
+    @binapy_serializer("foo")
+    def serialize(bp: BinaPy) -> BinaPy:
+        return 1  # type: ignore[return-value]
+
+    with pytest.raises(InvalidExtensionMethod):
+        BinaPy.serialize_to("foo", "foo")
+
+    @binapy_checker("foo")
+    def check_with_exception(bp: BinaPy) -> BinaPy:
+        raise ValueError()
+
+    assert BinaPy("foo").check("foo") is False
+
+    with pytest.raises(ValueError):
+        assert BinaPy("foo").check("foo", raise_on_error=True)

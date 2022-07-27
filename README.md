@@ -24,8 +24,8 @@ isinstance(bp, bytes)
 # True
 ```
 
-* Free software: MIT
-* Documentation: <https://guillp.github.io/binapy/>
+- Free software: MIT
+- Documentation: <https://guillp.github.io/binapy/>
 
 ## Features
 

@@ -4,35 +4,32 @@ import secrets
 from functools import wraps
 from typing import (
     Any,
-    AnyStr,
     Callable,
     Dict,
     Iterator,
     List,
     Optional,
-    Pattern,
     TypeVar,
     Union,
     cast,
     overload,
 )
 
-try:
-    from typing import Literal, SupportsIndex
-except ImportError:
-    from typing_extensions import Literal, SupportsIndex  # type: ignore
+from typing_extensions import Literal, SupportsIndex
 
 
 class BinaPy(bytes):
-    """
-    This subclass of `bytes` exposes various binary data manipulation methods.
-    Since this is a `bytes` subclass, you can use instances of `BinaPy` anywhere you can use `bytes`.
-    BinaPy allows (re)encoding of data using `encode_to(<format>)`, decoding using `decode_from(<format>)`,
-    parsing using `parse_from(<format>)`, and serialisation using `serialize_to(<format>)`.
+    """A helper class for binary data manipulation.
 
-    Actual transformations into formats such as Base64, JSON, etc. are implemented using Extensions.
-    Those extensions are registered using the decorators `binapy_encoder`, `binapy_decoder`, `binapy_checker`,
-    `binapy_serializer`, and `binapy_parser`.
+    This subclass of `bytes` exposes various binary data manipulation methods. Since this is
+    a `bytes` subclass, you can use instances of `BinaPy` anywhere you can use `bytes`. BinaPy
+    allows (re)encoding of data using `encode_to(<format>)`, decoding using
+    `decode_from(<format>)`, parsing using `parse_from(<format>)`, and serialisation using
+    `serialize_to(<format>)`.
+
+    Actual transformations into formats such as Base64, JSON, etc. are implemented using
+    Extensions. Those extensions are registered using the decorators `binapy_encoder`,
+    `binapy_decoder`, `binapy_checker`, `binapy_serializer`, and `binapy_parser`.
     """
 
     def __new__(
@@ -41,8 +38,7 @@ class BinaPy(bytes):
         encoding: str = "utf-8",
         errors: str = "strict",
     ) -> "BinaPy":
-        """
-        Overrides base method to accept a string with a default encoding of "utf-8".
+        """Override base method to accept a string with a default encoding of "utf-8".
 
         See Also:
             [`bytes` constructor](https://docs.python.org/3/library/stdtypes.html#bytes) and
@@ -67,8 +63,7 @@ class BinaPy(bytes):
         byteorder: Literal["little", "big"] = "big",
         signed: bool = False,
     ) -> "BinaPy":
-        """
-        Convert an `int` to a `BinaPy`.
+        """Convert an `int` to a `BinaPy`.
 
         This is a wrapper around [int.to_bytes()](https://docs.python.org/3/library/stdtypes.html#int.to_bytes) and
         takes the same parameters.
@@ -82,7 +77,6 @@ class BinaPy(bytes):
         Returns:
             a BinaPy with the binary representation of the given integer
         """
-
         if length is None:
             length = (i.bit_length() + 7) // 8
 
@@ -90,8 +84,9 @@ class BinaPy(bytes):
         return cls(data)
 
     def ascii(self) -> str:
-        """
-        Decode this BinaPy to a str, making sure that only ascii characters are part of the result.
+        """Decode this BinaPy to a str.
+
+        This makes sure that only ascii characters are part of the result.
 
         Returns:
             a str with only ASCII chars
@@ -99,8 +94,10 @@ class BinaPy(bytes):
         return self.decode("ascii")
 
     def re_match(self, pattern: str, encoding: str = "ascii") -> str:
-        """
-        Decode this binary value to a string using `encoding` then try to match it to the regular expression `pattern`.
+        """Decode this binary value to a string, then match it to a regex.
+
+        Decoding is done using the encoding defined in `encoding` (default to "ascii").
+        The decoded value is then matched with the regular expression `pattern`.
 
         If the match is successful, return the decoded string. Raise a `ValueError` otherwise.
 
@@ -115,15 +112,12 @@ class BinaPy(bytes):
             ValueError: if the decoded str doesn't match `pattern`
         """
         res = self.decode(encoding)
-        if pattern:
-            if re.match(pattern, res):
-                return res
-            raise ValueError(f"This value doesn't match pattern {pattern}")
-        return res
+        if re.match(pattern, res):
+            return res
+        raise ValueError(f"This value doesn't match pattern {pattern}")
 
     def text(self, encoding: str = "ascii") -> str:
-        """
-        Decode this BinaPy to a str, making sure that only printable characters are part of the result.
+        r"""Decode this BinaPy to a str, and check that the result is printable.
 
         Printable characters are characters from the range `[a-zA-Z0-9!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ ]`.
 
@@ -138,8 +132,7 @@ class BinaPy(bytes):
         )
 
     def urlsafe(self) -> str:
-        """
-        Convert this BinaPy to a str, making sure that only URL-safe characters are part of the result.
+        r"""Convert this BinaPy to a str, and check that it contains only url-safe characters.
 
         Url-safe characters are `[A-Za-z0-9_.\\-~]`.
 
@@ -149,8 +142,7 @@ class BinaPy(bytes):
         return self.re_match(r"^[A-Za-z0-9_.\-~]$")
 
     def alphanumeric(self) -> str:
-        """
-        Convert this BinaPy to a str, making sure that only alphanumeric characters are part of the result.
+        """Check that this BinaPy contains only alphanumeric characters.
 
         Returns:
             a str with only alphanumeric chars
@@ -160,8 +152,7 @@ class BinaPy(bytes):
     def to_int(
         self, byteorder: Literal["little", "big"] = "big", signed: bool = False
     ) -> int:
-        """
-        Convert this BinaPy to an `int`.
+        """Convert this BinaPy to an `int`.
 
         This is a wrapper around
         [int.from_bytes()](https://docs.python.org/3/library/stdtypes.html#int.from_bytes) and takes
@@ -180,8 +171,9 @@ class BinaPy(bytes):
     def from_binary_string(
         cls, s: str, byteorder: Literal["little", "big"] = "big", signed: bool = False
     ) -> "BinaPy":
-        """
-        Initializes a BinaPy based on a binary string (containing only 0 and 1).
+        """Initialize a BinaPy based on a binary string (containing only 0 and 1).
+
+        The string may contain spaces or tabs characters which will be ignored.
 
         Args:
             s: a binary string
@@ -191,29 +183,36 @@ class BinaPy(bytes):
         Returns:
             a BinaPy
         """
+        s = s.replace(" ", "").replace("\t", "")
         return cls(
             int(s, 2).to_bytes((len(s) + 7) // 8, byteorder=byteorder, signed=signed)
         )
 
     def to_binary_string(
-        self, byteorder: Literal["little", "big"] = "big", signed: bool = False
+        self,
+        byteorder: Literal["little", "big"] = "big",
+        signed: bool = False,
+        pad: bool = True,
     ) -> str:
-        """
-        Returns a string containing this this BinaPy in binary representation.
+        """Return a string containing this BinaPy value in binary representation.
 
         Args:
             byteorder: byte order to use
-            signed: True if 2 complement is used to represent negative values
+            signed: `True` if 2 complement is used to represent negative values
+            pad: if `True`, left pad the result with 0 to make length a multiple of 8
 
         Returns:
             a string with containing only 0 and 1
         """
-        return format(self.to_int(byteorder, signed), "b")
+        binary = format(self.to_int(byteorder, signed), "b")
+        if pad and len(binary) % 8:
+            d = len(binary) // 8
+            return binary.rjust(8 * d + 8, "0")
+        return binary
 
     @classmethod
     def random(cls, length: int) -> "BinaPy":
-        """
-        Return a BinaPy containing `length` random bytes
+        """Return a BinaPy containing `length` random bytes.
 
         Args:
             length: number of bytes to generate
@@ -225,8 +224,7 @@ class BinaPy(bytes):
 
     @classmethod
     def random_bits(cls, length: int) -> "BinaPy":
-        """
-        Return a BinaPy containing `length` random bits. Same as random(length//8).
+        """Return a BinaPy containing `length` random bits. Same as random(length//8).
 
         Length must be a multiple of 8.
 
@@ -239,16 +237,15 @@ class BinaPy(bytes):
         return cls(secrets.token_bytes(length // 8))
 
     @overload
-    def __getitem__(self, index: SupportsIndex) -> int:
-        ...
+    def __getitem__(self, index: SupportsIndex) -> int:  # noqa: D105
+        ...  # pragma: no cover
 
     @overload
-    def __getitem__(self, slice: slice) -> "BinaPy":
-        ...
+    def __getitem__(self, slice: slice) -> "BinaPy":  # noqa: D105
+        ...  # pragma: no cover
 
     def __getitem__(self, slice: Union[slice, SupportsIndex]) -> "Union[int, BinaPy]":
-        """
-        Override the base method so that slicing returns a BinaPy instead of just bytes.
+        """Override the base method so that slicing returns a BinaPy instead of just bytes.
 
         Args:
             slice: a slice or index
@@ -261,8 +258,7 @@ class BinaPy(bytes):
         return self.__class__(super().__getitem__(slice))
 
     def char_at(self, index: int) -> str:
-        """
-        Return the character at the given index.
+        """Return the character at the given index.
 
         Slicing a standard bytes returns an int. Sometimes what you really want is a single char string.
 
@@ -274,9 +270,11 @@ class BinaPy(bytes):
         """
         return chr(self[index])
 
-    def __add__(self, other: bytes) -> "BinaPy":
-        """
-        Override base method so that addition returns a BinaPy instead of bytes.
+    def __add__(
+        self,
+        other: Any,
+    ) -> "BinaPy":
+        """Override base method so that addition returns a BinaPy instead of bytes.
 
         Args:
             other: bytes or BinaPy to add
@@ -287,8 +285,7 @@ class BinaPy(bytes):
         return self.__class__(super().__add__(other))
 
     def __radd__(self, other: bytes) -> "BinaPy":
-        """
-        Override base method so that right addition returns a BinaPy instead of bytes.
+        """Override base method so that right addition returns a BinaPy instead of bytes.
 
         Args:
             other: bytes or BinaPy to radd
@@ -298,9 +295,8 @@ class BinaPy(bytes):
         """
         return self.__class__(other.__add__(self))
 
-    def split(self, sep: Optional[bytes] = None, maxsplit: int = -1) -> "List[BinaPy]":  # type: ignore[override]
-        """
-        Override base method so that split() returns a BinaPy instead of bytes.
+    def split(self, sep: Optional[bytes] = None, maxsplit: int = -1) -> "List[BinaPy]":  # type: ignore[override] #noqa: D402
+        """Override base method so that split() returns a BinaPy instead of bytes.
 
         Args:
             sep: a separator
@@ -312,8 +308,7 @@ class BinaPy(bytes):
         return [self.__class__(b) for b in super().split(sep, maxsplit)]
 
     def cut_at(self, *pos: int) -> "List[BinaPy]":
-        """
-        Cut this BinaPy at one or more integer positions.
+        """Cut this BinaPy at one or more integer positions.
 
         Args:
             *pos: indexes where to cut the BinaPy
@@ -336,7 +331,7 @@ class BinaPy(bytes):
     def _get_extension_methods(cls, name: str) -> Dict[str, Callable[..., Any]]:
         extension = cls.extensions.get(name)
         if extension is None:
-            raise ValueError(f"Extension {name} not found")
+            raise NotImplementedError(f"Extension {name} not found")
         return extension
 
     @classmethod
@@ -344,7 +339,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("check")
         if method is None:
-            raise ValueError(
+            raise NotImplementedError(
                 f"Extension {extension_name} doesn't have a checker method"
             )
         return method
@@ -354,7 +349,9 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("decode")
         if method is None:
-            raise ValueError(f"Extension {extension_name} doesn't have a decode method")
+            raise NotImplementedError(
+                f"Extension {extension_name} doesn't have a decode method"
+            )
         return method
 
     @classmethod
@@ -362,7 +359,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("encode")
         if method is None:
-            raise ValueError(
+            raise NotImplementedError(
                 f"Extension {extension_name} doesn't have an encode method"
             )
         return method
@@ -372,7 +369,9 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("parse")
         if method is None:
-            raise ValueError(f"Extension {extension_name} doesn't have a parse method")
+            raise NotImplementedError(
+                f"Extension {extension_name} doesn't have a parse method"
+            )
         return method
 
     @classmethod
@@ -380,14 +379,13 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("serialize")
         if method is None:
-            raise ValueError(
+            raise NotImplementedError(
                 f"Extension {extension_name} doesn't have a serialize method"
             )
         return method
 
     def encode_to(self, name: str, *args: Any, **kwargs: Any) -> "BinaPy":
-        """
-        Encode data from this BinaPy according to the format `name`.
+        """Encode data from this BinaPy according to the format `name`.
 
         Args:
             name: format to use
@@ -401,9 +399,8 @@ class BinaPy(bytes):
 
         return encoder(self, *args, **kwargs)
 
-    def to(self, name: str, *args: Any, **kwargs: Any) -> "BinaPy":
-        """
-        Alias for `encode_to()`.
+    def to(self, name: str, *args: Any, **kwargs: Any) -> "BinaPy":  # noqa: D402
+        """Alias for `encode_to()`.
 
         Args:
             name: same as `encode_to()`
@@ -416,8 +413,7 @@ class BinaPy(bytes):
         return self.encode_to(name, *args, **kwargs)
 
     def decode_from(self, name: str, *args: Any, **kwargs: Any) -> "BinaPy":
-        """
-        Decode data from this BinaPy according to the format `name`.
+        """Decode data from this BinaPy according to the format `name`.
 
         Args:
             name: format name to use
@@ -434,8 +430,7 @@ class BinaPy(bytes):
     def check(
         self, name: str, decode: bool = False, raise_on_error: bool = False
     ) -> bool:
-        """
-        Check that this BinaPy conforms to a given format extension.
+        """Check that this BinaPy conforms to a given format extension.
 
         Args:
             name: the name of the extension to check
@@ -445,7 +440,6 @@ class BinaPy(bytes):
         Returns:
             a boolean, that is True if this BinaPy conforms to the given extension format, False otherwise.
         """
-
         # raises an exception in case the extension doesn't exist
         self._get_extension_methods(name)
 
@@ -453,11 +447,13 @@ class BinaPy(bytes):
             checker = self._get_checker(name)
             try:
                 return checker(self)
+            except InvalidExtensionMethod as exc:
+                raise exc
             except Exception as exc:
                 if raise_on_error:
                     raise exc from exc
                 return False
-        except ValueError:
+        except NotImplementedError:
             try:
                 decoder = self._get_decoder(name)
                 # if checker is not implemented and decode is True, try to decode instead
@@ -469,13 +465,12 @@ class BinaPy(bytes):
                         if raise_on_error:
                             raise exc from exc
                         return False
-            except ValueError:
+            except NotImplementedError:
                 return False
         return False
 
     def check_all(self, decode: bool = False) -> List[str]:
-        """
-        Check if this BinaPy conforms to any of the registered format extensions.
+        """Check if this BinaPy conforms to any of the registered format extensions.
 
         Returns:
              a list of format extensions that this BinaPy can be decoded from.
@@ -494,8 +489,7 @@ class BinaPy(bytes):
         return list(get_results())
 
     def parse_from(self, name: str, *args: Any, **kwargs: Any) -> Any:
-        """
-        Parse data from this BinaPy, based on a given format extension.
+        """Parse data from this BinaPy, based on a given format extension.
 
         Args:
             name: name of the extension to use
@@ -511,8 +505,7 @@ class BinaPy(bytes):
 
     @classmethod
     def serialize_to(cls, name: str, *args: Any, **kwargs: Any) -> "BinaPy":
-        """
-        Serialize (dump) data to a BinaPy, based on a given extension format.
+        """Serialize (dump) data to a BinaPy, based on a given extension format.
 
         Args:
             name: name of the extension to use
@@ -530,6 +523,13 @@ class BinaPy(bytes):
     def register_extension(
         cls, name: str, feature: str, func: Callable[..., Any]
     ) -> None:
+        """Register a new feature for the given extension name.
+
+        Args:
+            name: the extension name
+            feature: name of the feature to register ("encode", "decode", etc.)
+            func: the method implementing the feature
+        """
         ext_dict = cls.extensions.setdefault(name, {})
         ext_dict[feature] = func
 
@@ -537,13 +537,43 @@ class BinaPy(bytes):
 F = TypeVar("F", bound=Callable[..., Any])
 
 
+class InvalidExtensionMethod(ValueError):
+    """Raised when an extension method returns invalid data."""
+
+
 def binapy_encoder(name: str) -> Callable[[F], F]:
+    """Declare new encoders for BinaPy.
+
+    This is a method decorator. Encoders do convert a BinaPy into another BinaPy using a given format/extension.
+
+    Args:
+        name: name of the extension
+
+    Returns:
+        a method decorator
+
+    Usage:
+        To declare a special "double-encoding" which just copy the data twice:
+
+        ```python
+        from binapy import binapy_encoder
+
+
+        @binapy_encoder("double")
+        def double_encode(data: bytes) -> bytes:
+            return data * 2
+
+
+        assert BinaPy(b"abc").to("double") == b"abcabc"
+        ```
+    """
+
     def decorator(func: F) -> F:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> BinaPy:
             raw_result = func(*args, **kwargs)
             if not isinstance(raw_result, (bytes, bytearray, str)):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} encoder method did not return binary data"
                 )
             return BinaPy(raw_result)
@@ -554,13 +584,41 @@ def binapy_encoder(name: str) -> Callable[[F], F]:
     return decorator
 
 
-def binapy_decoder(name: str) -> Callable[[F], F]:
+def binapy_decoder(name: str) -> Callable[[F], F]:  # noqa: D401
+    """Declare a new decoder for BinaPy.
+
+    This is a method decoator. Decoders do convert BinaPy data from a given format into another BinaPy.
+
+    Args:
+        name: name of the extension
+
+    Returns:
+        a method decorator
+
+    Usage:
+        The matching decoder for the special "double-encoding" we created with `binapy_encoder()`:
+
+        ```python
+        from binapy import binapy_decoder
+
+
+        @binapy_decoder("double")
+        def double_decode(data: bytes) -> bytes:
+            if len(data) % 2 or data[: len(data) // 2] != data[len(data) // 2 :]:
+                raise ValueError("This is not a double-encoded data!")
+            return data[: len(data) // 2]
+
+
+        assert BinaPy(b"abcabc").decode_from("double") == b"abc"
+        ```
+    """
+
     def decorator(func: F) -> F:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> BinaPy:
             raw_result = func(*args, **kwargs)
             if not isinstance(raw_result, (bytes, bytearray)):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} decoder method did not return binary data"
                 )
             return BinaPy(raw_result)
@@ -572,13 +630,39 @@ def binapy_decoder(name: str) -> Callable[[F], F]:
 
 
 def binapy_checker(name: str) -> Callable[[F], F]:
+    """Declare a new checker for BinaPy.
+
+    This is a decorator. Checker check that some data is valid for a given format/extension.
+
+    Args:
+        name: name of the extension
+
+    Returns:
+        a method decorator
+
+    Usage:
+        The matching checker for the special "double-encoding" we created with `binapy_encoder()`:
+
+        ```python
+        from binapy import binapy_checker
+
+
+        @binapy_checker("double")
+        def double_check(data: bytes) -> bytes:
+            return len(data) % 2 == 0 and data[: len(data) // 2] == data[len(data) // 2 :]
+
+
+        assert BinaPy(b"abcabc").check("double")
+        ```
+    """
+
     def decorator(func: F) -> F:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> bool:
             raw_result = func(*args, **kwargs)
 
             if not isinstance(raw_result, bool):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} checker method did not return boolean data"
                 )
             return raw_result
@@ -590,12 +674,24 @@ def binapy_checker(name: str) -> Callable[[F], F]:
 
 
 def binapy_serializer(name: str) -> Callable[[F], F]:
+    """Declare a new serializer for BinaPy.
+
+    This is a method decorator. Serializers do convert Python objects into BinaPy.
+    For example, a JSON serializer will convert a Python `dict` into a serialized JSON value.
+
+    Args:
+        name: extension name to use
+
+    Returns:
+        a method decorator
+    """
+
     def decorator(func: F) -> F:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> BinaPy:
             raw_result = func(*args, **kwargs)
             if not isinstance(raw_result, (bytes, bytearray)):
-                raise ValueError(
+                raise InvalidExtensionMethod(
                     f"extension {name} serializer method did not return binary data"
                 )
             return BinaPy(raw_result)
@@ -607,6 +703,18 @@ def binapy_serializer(name: str) -> Callable[[F], F]:
 
 
 def binapy_parser(name: str) -> Callable[[F], F]:
+    """Declare a new parser for BinaPy.
+
+    This is a method decorator. Parsers do convert BinaPy into Python objects.
+    For example, a JSON parser will convert a BinaPy into a dict, by parsing the JSON formatted string from a BinaPy.
+
+    Args:
+        name: the extension name to use
+
+    Returns:
+        a method decorator
+    """
+
     def decorator(func: Callable[..., Any]) -> Any:
         BinaPy.register_extension(name, "parse", func)
         return func

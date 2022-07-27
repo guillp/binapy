@@ -1,6 +1,7 @@
 # Usage
 
 ## Import
+
 To use BinaPy in a project, import the main class like this:
 
 ```python
@@ -12,6 +13,7 @@ You may also `.decode()` it to convert it to a `str`, or use any of the default 
 It also provides a few additional convenience methods, such as `cut_at(*pos)`, `.ascii()`, etc.
 
 ## Initialize
+
 To initialize a `BinaPy`:
 
 - from a `bytes`: `bp = BinaPy(b'my raw bytes \x01\xcf'`)
@@ -23,10 +25,12 @@ To initialize a `BinaPy`:
 - from a string containing the binary representation of your data: `bp = BinaPy.from_binary_string('101010')`. The reverse transformation is available with `bp.to_binary_string()`.
 
 ## Encoding / Decoding / Transformations
+
 Use the methods `encode_to()` (or its alias `.to()`) and `decode_from()` to transform a BinaPy value into another, using an encoding or transformation scheme. The result value
 being a BinaPy, you can keep applying those transformations fluently.
 
 For example, to generate a random binary data, hash it with SHA256 then Base64-url encode the result:
+
 ```python
 bp = BinaPy.random(128).to("sha256").encode_to("b64u")
 print(bp)
@@ -34,6 +38,7 @@ print(bp)
 ```
 
 To illustrate the `.decode_from()` method, lets Base64-url decode this value and convert it to hex:
+
 ```python
 print(bp.decode_from("b64u").to("hex"))
 # b'413b3ae2db8c67e4e7c983e18e8a48af26853de176e9228a378cbeb2edac0588'
@@ -45,7 +50,6 @@ A few noteworthy remarks:
 - the verb _encode_ is not really suitable for hashes. That's one of the 2 reasons the `.to()` alias exists. The other reason is that it's shorter :)
 - there is no `from()` alias to `decode_from()`. That's because `from` is a reversed word in Python, so it cannot be used as a method name. `from_()` could be used but it makes the code much uglier than `decode_from()`.
 
-
 ## Converting from binary to text or numeric data types
 
 `BinaPy` has a few convenience methods to convert a binary data into:
@@ -55,6 +59,7 @@ A few noteworthy remarks:
 - a binary string: use `.to_binary_string()`.
 
 ## Checking data contents
+
 You can check if a BinaPy data conforms with a given extension using the `.check(name)` method.
 
 ```python
@@ -67,6 +72,7 @@ bp.check("hex")
 
 You can also check a BinaPy against all extensions using `.check_all()`. For example,
 any random 20 bytes could be the result from a SHA1 hash:
+
 ```python
 bp = BinaPy.random(20)
 bp.check_all()
@@ -75,25 +81,32 @@ bp.check_all()
 
 While a given string with only hex characters could be a hexadecimal string, it could also be the result of a base64
 or a base64url encoding.
+
 ```python
 bp = BinaPy("abcdef1234567890")
 bp.check_all()
 # ['b64', 'b64u', 'hex']
 # ['b64', 'b64u', 'hex']
 ```
+
 ## Loading and dumping
+
 Dumping and encoding data can be done this way:
+
 ```python
 BinaPy.serialize_to("json", {"foo": "bar"}).to("b64u")
 # b'ewoiZm9vIjogImJhciIKfQ'
 ```
+
 Loading serialized and encoded data can be done this way:
+
 ```python
 BinaPy(b"ewoiZm9vIjogImJhciIKfQ").decode_from("b64u").parse_from("json")
 # {'foo': 'bar'}
 ```
 
 ## extend
+
 You can implement additional methods for BinaPy. Methods can implement one or several of the following features:
 
 - an *encoder*: this will transform/encode the current BinaPy into another BinaPy. E.g., a base64 encoder will transform arbitrary binary data into a base64 encoded string.
