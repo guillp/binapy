@@ -643,7 +643,7 @@ python-versions = ">=3.6"
 name = "typing-extensions"
 version = "4.3.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -691,7 +691,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0"
-content-hash = "c9ed76b25f2cfcfeae3649a5e0a175bae42b3117d2b112f29bbd940d563c8c55"
+content-hash = "cb74d0c2fde068f1ca43ddcabd135faac1690b54099e832d6d44f459f7726725"
 
 [metadata.files]
 atomicwrites = [

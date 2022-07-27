@@ -1,7 +1,9 @@
 """Helpers for the Shake Hash family."""
 import functools
 import hashlib
-from typing import Callable, Protocol
+from typing import Callable, Sequence
+
+from typing_extensions import Protocol
 
 from binapy import binapy_checker, binapy_encoder
 
@@ -71,3 +73,5 @@ for alg, func in (
     ("sshake256", hashlib.shake_256),
 ):
     binapy_encoder(alg)(functools.partial(salted_shake_hash, func))
+
+__all__: Sequence[str] = []

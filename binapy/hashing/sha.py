@@ -5,7 +5,9 @@ Those include SHA1, SHA256, etc.
 
 import functools
 import hashlib
-from typing import Callable, Protocol
+from typing import Callable, Sequence
+
+from typing_extensions import Protocol
 
 from binapy import binapy_checker, binapy_encoder
 
@@ -100,3 +102,5 @@ for alg, func, min_length, max_length in (
 ):
     binapy_encoder(alg)(functools.partial(salted_sha_hash, func))
     binapy_checker(alg)(functools.partial(is_salted_sha_hash, min_length, max_length))
+
+__all__: Sequence[str] = []
