@@ -15,10 +15,10 @@ With BinaPy, encoding or decoding data in a number of formats (base64, base64url
 ```python
 from binapy import BinaPy
 
-bp = BinaPy("Hello, World!").to("gzip").to("b64u")
+bp = BinaPy("Hello, World!").to("deflate").to("b64u")
 print(bp)
-# b'eJzzSM3JyddRCM8vyklRBAAfngRq'
-bp.decode_from("b64u").decode_from("gzip").decode()
+# b'80jNycnXUQjPL8pJUQQA'
+bp.decode_from("b64u").decode_from("deflate").decode()
 # "Hello, World!"
 isinstance(bp, bytes)
 # True
@@ -30,14 +30,10 @@ isinstance(bp, bytes)
 ## Features
 
 - Fluent interface, based on a `bytes` subclass
-- Provides a convenient interface over `hashlib`, `base64`, `gzip`, `urllib.parse`, `json` and more
+- Provides a convenient interface over `hashlib`, `base64`, `zlib`, `urllib.parse`, `json` and more
 - Easy to extend with new formats
 
 ## TODO
 
 - add more parsing formats like YAML, CBOR, etc.
 - optionally use faster third-party modules when available
-
-## Credits
-
-This package template was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the [zillionare/cookiecutter-pypackage](https://github.com/zillionare/cookiecutter-pypackage) project template.
