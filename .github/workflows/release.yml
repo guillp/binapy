@@ -18,19 +18,19 @@ jobs:
   # This workflow contains a single job called "build"
   release:
     name: Create Release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
-        python-versions: [3.8]
+        python-versions: ['3.10']
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Generate Changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.1.1
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issues: true
@@ -42,7 +42,7 @@ jobs:
           output: CHANGELOG.md
           sinceTag: v0.4.1
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-versions }}
 
@@ -51,7 +51,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install tox-gh-actions poetry
 
-      - name: Pre-publish documentation
+      - name: Build documentation
         run: |
           poetry install
           poetry run mkdocs build
@@ -70,7 +70,7 @@ jobs:
         run: >-
           ls -l
 
-      - name: Create github release
+      - name: Create GitHub release
         id: create_release
         uses: softprops/action-gh-release@v1
         env:
