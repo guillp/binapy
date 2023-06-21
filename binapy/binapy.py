@@ -9,6 +9,7 @@ from typing import (
     Iterator,
     List,
     Optional,
+    SupportsBytes,
     TypeVar,
     Union,
     cast,
@@ -34,7 +35,7 @@ class BinaPy(bytes):
 
     def __new__(
         cls,
-        value: Union[bytes, str, int] = b"",
+        value: Union[bytes, str, int, SupportsBytes] = b"",
         encoding: str = "utf-8",
         errors: str = "strict",
     ) -> "BinaPy":
@@ -323,9 +324,7 @@ class BinaPy(bytes):
         ]
 
     extensions: Dict[str, Dict[str, Callable[..., Any]]] = {}
-    """
-    Extension registry.
-    """
+    """Extension registry."""
 
     @classmethod
     def _get_extension_methods(cls, name: str) -> Dict[str, Callable[..., Any]]:
@@ -455,9 +454,9 @@ class BinaPy(bytes):
                 return False
         except NotImplementedError:
             try:
-                decoder = self._get_decoder(name)
                 # if checker is not implemented and decode is True, try to decode instead
-                if decode and decoder:
+                if decode:
+                    decoder = self._get_decoder(name)
                     try:
                         decoder(self)
                         return True

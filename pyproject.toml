@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "binapy"
-version = "0.6.0"
+version = "0.6.1"
 homepage = "https://github.com/guillp/binapy"
 description = "Binary Data manipulation, for humans."
 authors = ["Guillaume Pujol <guill.p.linux@gmail.com>"]
@@ -17,6 +17,7 @@ classifiers=[
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
 ]
 packages = [
     { include = "binapy" },
