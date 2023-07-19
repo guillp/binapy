@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "binapy"
-version = "0.6.1"
+version = "0.7.0"
 homepage = "https://github.com/guillp/binapy"
 description = "Binary Data manipulation, for humans."
 authors = ["Guillaume Pujol <guill.p.linux@gmail.com>"]
@@ -11,9 +11,7 @@ classifiers=[
     'Development Status :: 2 - Pre-Alpha',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
-    'Natural Language :: English',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
@@ -25,34 +23,33 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0"
-typing-extensions = "^4.3.0"
+python = ">=3.8"
+typing-extensions = ">=4.3.0"
 
 [tool.poetry.dev-dependencies]
-black  = ">=22.1"
+black  = ">=23.7"
 coverage = ">=6.3.1"
-isort  = ">=5.10.1"
+isort  = ">=5.12.0"
 livereload = ">=2.6.3"
-mypy = ">=0.931"
+mypy = ">=1.4.1"
 mkdocs  = ">=1.3.1"
 mkdocs-autorefs = ">=0.3.1"
-mkdocs-include-markdown-plugin  = ">=3.2.3"
-mkdocs-material  = ">=8.1.10"
+mkdocs-material  = ">=9.1.19"
 mkdocs-material-extensions  = ">=1.0.1"
 mkdocstrings  = { version = ">=0.18.0", extras = ["python"] }
-pre-commit = ">=2.17.0"
-pytest  = ">=7.0.0"
+pre-commit = ">=3.3.3"
+pytest  = ">=7.4.0"
 pytest-mypy = ">=0.9.1"
 pytest-cov  = ">=3.0.0"
 toml = ">=0.10.2"
-tox  = ">=3.24.5"
+tox  = ">=4.6.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line-length = 88
+line-length = 96
 include = '\.pyi?$'
 exclude = '''
 /(
@@ -88,4 +85,4 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
-line_length = 88
+line_length = 96
