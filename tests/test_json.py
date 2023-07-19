@@ -41,9 +41,7 @@ def test_json_encoder() -> None:
 def test_compact() -> None:
     bp = BinaPy.serialize_to("json", {"a": "b", "c": "d"}, sort_keys=True, compact=True)
     assert bp == b'{"a":"b","c":"d"}'
-    bp = BinaPy.serialize_to(
-        "json", {"a": "b", "c": "d"}, sort_keys=True, compact=False
-    )
+    bp = BinaPy.serialize_to("json", {"a": "b", "c": "d"}, sort_keys=True, compact=False)
     assert bp == b'{\n  "a": "b", \n  "c": "d"\n}'
 
     bp = BinaPy.serialize_to(

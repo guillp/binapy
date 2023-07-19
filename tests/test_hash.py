@@ -122,9 +122,7 @@ def test_sha(alg: str, append_salt: Optional[bool], hexhash: str) -> None:
         ),
     ),
 )
-def test_shake(
-    alg: str, append_salt: Optional[bool], length: int, hexhash: str
-) -> None:
+def test_shake(alg: str, append_salt: Optional[bool], length: int, hexhash: str) -> None:
     data = BinaPy("my_data")
     salt = BinaPy(b"my_salt")
 

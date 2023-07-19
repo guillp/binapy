@@ -39,8 +39,4 @@ def is_hex(bp: bytes) -> bool:
     Returns:
         `True` if `bp` is a valid hexadecimal string
     """
-    return (
-        len(bp) % 2 == 0
-        and bp.isalnum()
-        and set(bp.lower()).issubset(b"abcdef0123456789")
-    )
+    return len(bp) % 2 == 0 and bp.isalnum() and set(bp.lower()).issubset(b"abcdef0123456789")
