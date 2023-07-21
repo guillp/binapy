@@ -4,5 +4,6 @@ This includes Base64, Hexadecidemal, url-encoding, etc.
 """
 
 from .base64 import *
+from .dumb import *
 from .hex import *
 from .url import *

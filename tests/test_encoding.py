@@ -1,3 +1,5 @@
+import string
+
 import pytest
 
 from binapy import BinaPy
@@ -37,3 +39,18 @@ def test_url() -> None:
         bp.encode_to("url", plus_spaces=False)
         == b"https%3A//localhost%3A3200/foo%3Fbar%3Dab%20cd"
     )
+
+
+def test_caesar() -> None:
+    assert BinaPy("caesar13").to("caesar", 13, string.ascii_lowercase) == b"pnrfne13"
+    assert (
+        BinaPy(string.ascii_lowercase).to("caesar", 13, string.ascii_lowercase)
+        == b"nopqrstuvwxyzabcdefghijklm"
+    )
+    assert (
+        BinaPy(string.ascii_letters).to("caesar", 13, string.ascii_letters)
+        == b"nopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm"
+    )
+
+    for data in (b"caesar", b"CAESAR", b"FooBAR", bytes(range(128))):
+        assert BinaPy(data).to("caesar", 4).decode_from("caesar", 4) == data
