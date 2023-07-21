@@ -54,3 +54,5 @@ def test_caesar() -> None:
 
     for data in (b"caesar", b"CAESAR", b"FooBAR", bytes(range(128))):
         assert BinaPy(data).to("caesar", 4).decode_from("caesar", 4) == data
+
+    assert BinaPy(b"\x00\xff").to("caesar", 1) == b"\x01\x00"

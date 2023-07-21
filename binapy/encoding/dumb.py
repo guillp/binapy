@@ -23,7 +23,8 @@ def encode_caesar(
     - `string.ascii_uppercase` if all character from the input are uppercase letters ASCII codes
     - `string.ascii_lowercase` if all character from the input are lowercase letters ASCII codes
     - `string.ascii_letters` if all character from the input are letters (both upper and lower case) ASCII codes
-    - the full ASCII range (0-127) otherwise
+    - the full ASCII range (0-127) if all characters are valid ASCII
+    - the full octect range (0-255) otherwise
 
     Args:
         bp: input data.
@@ -43,7 +44,7 @@ def encode_caesar(
         elif all(0 <= c <= 127 for c in bp):
             alphabet = string.ascii_letters
         else:
-            raise ValueError("Unable to auto-detect alphabet.")
+            alphabet = bytes(range(256))
 
     if isinstance(alphabet, str):
         alphabet = alphabet.encode()
