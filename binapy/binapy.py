@@ -10,13 +10,14 @@ from typing import (
     List,
     Optional,
     SupportsBytes,
+    SupportsIndex,
     TypeVar,
     Union,
     cast,
     overload,
 )
 
-from typing_extensions import Literal, SupportsIndex
+from typing_extensions import Literal
 
 
 class BinaPy(bytes):
@@ -128,9 +129,7 @@ class BinaPy(bytes):
         Returns:
             the decoded text
         """
-        return self.re_match(
-            r'^[a-zA-Z0-9!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ ]*$', encoding
-        )
+        return self.re_match(r'^[a-zA-Z0-9!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ ]*$', encoding)
 
     def urlsafe(self) -> str:
         r"""Convert this BinaPy to a str, and check that it contains only url-safe characters.
@@ -150,9 +149,7 @@ class BinaPy(bytes):
         """
         return self.re_match(r"^[a-zA-Z]$")
 
-    def to_int(
-        self, byteorder: Literal["little", "big"] = "big", signed: bool = False
-    ) -> int:
+    def to_int(self, byteorder: Literal["little", "big"] = "big", signed: bool = False) -> int:
         """Convert this BinaPy to an `int`.
 
         This is a wrapper around
@@ -185,9 +182,7 @@ class BinaPy(bytes):
             a BinaPy
         """
         s = s.replace(" ", "").replace("\t", "")
-        return cls(
-            int(s, 2).to_bytes((len(s) + 7) // 8, byteorder=byteorder, signed=signed)
-        )
+        return cls(int(s, 2).to_bytes((len(s) + 7) // 8, byteorder=byteorder, signed=signed))
 
     def to_binary_string(
         self,
@@ -368,9 +363,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("parse")
         if method is None:
-            raise NotImplementedError(
-                f"Extension {extension_name} doesn't have a parse method"
-            )
+            raise NotImplementedError(f"Extension {extension_name} doesn't have a parse method")
         return method
 
     @classmethod
@@ -426,9 +419,7 @@ class BinaPy(bytes):
 
         return decoder(self, *args, **kwargs)
 
-    def check(
-        self, name: str, decode: bool = False, raise_on_error: bool = False
-    ) -> bool:
+    def check(self, name: str, decode: bool = False, raise_on_error: bool = False) -> bool:
         """Check that this BinaPy conforms to a given format extension.
 
         Args:
@@ -519,9 +510,7 @@ class BinaPy(bytes):
         return serializer(*args, **kwargs)
 
     @classmethod
-    def register_extension(
-        cls, name: str, feature: str, func: Callable[..., Any]
-    ) -> None:
+    def register_extension(cls, name: str, feature: str, func: Callable[..., Any]) -> None:
         """Register a new feature for the given extension name.
 
         Args:
