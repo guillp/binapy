@@ -13,7 +13,7 @@
         <link rel="next" href="installation/">
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.16">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.19">
     
     
       
@@ -21,7 +21,7 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.26e3688c.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.eebd395e.min.css">
       
         
         <link rel="stylesheet" href="assets/stylesheets/palette.ecc896b0.min.css">
@@ -65,11 +65,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#binapy" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -318,58 +313,9 @@
       
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          home
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="." class="md-nav__link md-nav__link--active">
         home
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#binapy" class="md-nav__link">
-    BinaPy
-  </a>
-  
-    <nav class="md-nav" aria-label="BinaPy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    Features
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
-    TODO
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -483,41 +429,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#binapy" class="md-nav__link">
-    BinaPy
-  </a>
-  
-    <nav class="md-nav" aria-label="BinaPy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
-    Features
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#todo" class="md-nav__link">
-    TODO
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -536,50 +447,9 @@
 
   <h1>home</h1>
 
-<!-- BEGIN INCLUDE ../README.md -->
-<h2 id="binapy">BinaPy<a class="headerlink" href="#binapy" title="Permanent link">&para;</a></h2>
-<p><a href="https://www.python.org/"><img alt="made-with-python" src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg" /></a>
-<a href="https://pepy.tech/project/binapy"><img alt="Downloads" src="https://pepy.tech/badge/binapy/month" /></a>
-<a href="https://pypi.org/project/binapy"><img alt="Supported Versions" src="https://img.shields.io/pypi/pyversions/binapy.svg" /></a>
-<a href="https://badgen.net/pypi/v/binapy"><img alt="PyPi version" src="https://badgen.net/pypi/v/binapy" /></a>
-<a href="https://pypi.python.org/pypi/binapy/"><img alt="PyPI status" src="https://img.shields.io/pypi/status/binapy.svg" /></a>
-<a href="https://pypi.com/project/binapy/"><img alt="PyPi license" src="https://badgen.net/pypi/license/binapy/" /></a></p>
-<p><strong>BinaPy</strong> is a module that makes Binary Data manipulation simpler and easier than what is offered in the Python standard library.</p>
-<p>With BinaPy, encoding or decoding data in a number of formats (base64, base64url, hex, url-encoding, etc.), compressing or decompressing (gzip), hashing (SHA1, SHA256, MD5, etc., with or without salt), is all a single method call away! And you can extend it with new formats and features.</p>
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span>
-<span class="normal">4</span>
-<span class="normal">5</span>
-<span class="normal">6</span>
-<span class="normal">7</span>
-<span class="normal">8</span>
-<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kn">from</span> <span class="nn">binapy</span> <span class="kn">import</span> <span class="n">BinaPy</span>
-
-<span class="n">bp</span> <span class="o">=</span> <span class="n">BinaPy</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;deflate&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
-<span class="c1"># b&#39;80jNycnXUQjPL8pJUQQA&#39;</span>
-<span class="n">bp</span><span class="o">.</span><span class="n">decode_from</span><span class="p">(</span><span class="s2">&quot;b64u&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode_from</span><span class="p">(</span><span class="s2">&quot;deflate&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-<span class="c1"># &quot;Hello, World!&quot;</span>
-<span class="nb">isinstance</span><span class="p">(</span><span class="n">bp</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
-<span class="c1"># True</span>
-</code></pre></div></td></tr></table></div>
-<ul>
-<li>Free software: MIT</li>
-<li>Documentation: <a href="https://guillp.github.io/binapy/">https://guillp.github.io/binapy/</a></li>
-</ul>
-<h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Fluent interface, based on a <code>bytes</code> subclass</li>
-<li>Provides a convenient interface over <code>hashlib</code>, <code>base64</code>, <code>zlib</code>, <code>urllib.parse</code>, <code>json</code> and more</li>
-<li>Easy to extend with new formats</li>
-</ul>
-<h3 id="todo">TODO<a class="headerlink" href="#todo" title="Permanent link">&para;</a></h3>
-<ul>
-<li>add more parsing formats like YAML, CBOR, etc.</li>
-<li>optionally use faster third-party modules when available</li>
-</ul>
-<!-- END INCLUDE -->
+<p>{%
+include-markdown "../README.md"
+%}</p>
 
 
 
@@ -637,10 +507,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.tabs", "navigation.instant", "navigation.tabs.sticky"], "search": "assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.tabs", "navigation.instant", "navigation.tabs.sticky"], "search": "assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.a51614de.min.js"></script>
+      <script src="assets/javascripts/bundle.220ee61c.min.js"></script>
       
     
   </body>
