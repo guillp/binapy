@@ -42,7 +42,7 @@ def encode_caesar(
         elif all(65 <= c <= 90 or 97 <= c <= 122 for c in bp):
             alphabet = string.ascii_letters
         elif all(0 <= c <= 127 for c in bp):
-            alphabet = string.ascii_letters
+            alphabet = bytes(range(128))
         else:
             alphabet = bytes(range(256))
 
