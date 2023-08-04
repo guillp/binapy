@@ -29,7 +29,7 @@ isinstance(bp, bytes)
 ## Features
 
 - Fluent interface, based on a `bytes` subclass
-- Provides a convenient interface over `hashlib`, `base64`, `zlib`, `urllib.parse`, `json` and more
+- Provides a convenient interface over `hashlib`, `base64`, `zlib`, `urllib.parse`, `json`, `pickle` and more
 - Easy to extend with new formats
 
 ## TODO
