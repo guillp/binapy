@@ -1,2 +1,2 @@
 """This module contains compression related utilities."""
-from .zlib import *
+from . import zlib  # noqa: F401

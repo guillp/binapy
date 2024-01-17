@@ -1,9 +1,7 @@
 """This module contains encoding/decoding utilities to handle various encodings.
 
 This includes Base64, Hexadecidemal, url-encoding, etc.
+
 """
 
-from .base64 import *
-from .dumb import *
-from .hex import *
-from .url import *
+from . import base64, dumb, hex, url  # noqa: F401

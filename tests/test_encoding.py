@@ -35,18 +35,12 @@ def test_url() -> None:
     assert bp.encode_to("url") == b"https%3A//localhost%3A3200/foo%3Fbar%3Dab+cd"
 
     assert bp.encode_to("url", plus_spaces=False).decode_from("url", plus_spaces=False) == bp
-    assert (
-        bp.encode_to("url", plus_spaces=False)
-        == b"https%3A//localhost%3A3200/foo%3Fbar%3Dab%20cd"
-    )
+    assert bp.encode_to("url", plus_spaces=False) == b"https%3A//localhost%3A3200/foo%3Fbar%3Dab%20cd"
 
 
 def test_caesar() -> None:
     assert BinaPy("caesar13").to("caesar", 13, string.ascii_lowercase) == b"pnrfne13"
-    assert (
-        BinaPy(string.ascii_lowercase).to("caesar", 13, string.ascii_lowercase)
-        == b"nopqrstuvwxyzabcdefghijklm"
-    )
+    assert BinaPy(string.ascii_lowercase).to("caesar", 13, string.ascii_lowercase) == b"nopqrstuvwxyzabcdefghijklm"
     assert (
         BinaPy(string.ascii_letters).to("caesar", 13, string.ascii_letters)
         == b"nopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm"

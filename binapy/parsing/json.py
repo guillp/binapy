@@ -2,22 +2,31 @@
 
 import json
 from datetime import datetime
-from typing import Any, Callable
+from typing import Any, Callable, Iterable, Mapping
 
 from binapy import binapy_parser, binapy_serializer
 
 
-def _default_json_encode(data: Any) -> Any:  # noqa: D401
-    """A JSON encoder which converts `datetime` instance to UTC timestamps.
+def _default_json_encode(data: Any) -> Any:
+    """A JSON encoder which handles more default types.
+
+    - `datetime` instances are converted to UTC timestamps.
+    - `Mapping`  subclasses are converted to dict
+    - `Iterable` subclasses are converted to list
 
     Args:
         data: the data to serialize
 
     Returns:
         the serialized data
+
     """
     if isinstance(data, datetime):
         return int(data.timestamp())
+    elif isinstance(data, Mapping):
+        return dict(data)
+    elif isinstance(data, Iterable):
+        return list(data)
     return str(data)
 
 
@@ -30,6 +39,7 @@ def to_json(bp: bytes) -> Any:
 
     Returns:
         the resulting Python object
+
     """
     return json.loads(bp)
 
@@ -37,9 +47,10 @@ def to_json(bp: bytes) -> Any:
 @binapy_serializer("json")
 def from_json(
     data: Any,
+    *,
     compact: bool = True,
     default_encoder: Callable[[Any], Any] = _default_json_encode,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> bytes:
     """Serialize a Python value (usually a `dict`) into a JSON formatted string.
 
@@ -51,6 +62,7 @@ def from_json(
 
     Returns:
         the JSON encoded string
+
     """
     if compact:
         kwargs.setdefault("separators", (",", ":"))

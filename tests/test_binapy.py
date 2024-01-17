@@ -6,7 +6,7 @@ import pytest
 
 from binapy import (
     BinaPy,
-    InvalidExtensionMethod,
+    InvalidExtensionMethodError,
     binapy_checker,
     binapy_decoder,
     binapy_encoder,
@@ -156,7 +156,9 @@ def test_exceptions() -> None:
 
 
 def test_str() -> None:
-    ascii_safe_chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+    ascii_safe_chars = (
+        "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+    )
     assert BinaPy(ascii_safe_chars, "ascii").ascii() == ascii_safe_chars
 
     assert BinaPy(string.ascii_letters + string.digits).re_match(r"[a-zA-Z0-9]")
@@ -193,28 +195,28 @@ def test_invalid_features() -> None:
     def decode(bp: BinaPy) -> BinaPy:
         return 1  # type: ignore[return-value]
 
-    with pytest.raises(InvalidExtensionMethod):
+    with pytest.raises(InvalidExtensionMethodError):
         BinaPy("foo").decode_from("foo")
 
     @binapy_encoder("foo")
     def encode(bp: BinaPy) -> BinaPy:
         return 1  # type: ignore[return-value]
 
-    with pytest.raises(InvalidExtensionMethod):
+    with pytest.raises(InvalidExtensionMethodError):
         BinaPy("foo").to("foo")
 
     @binapy_checker("foo")
     def check(bp: BinaPy) -> BinaPy:
         return "whatever"  # type: ignore[return-value]
 
-    with pytest.raises(InvalidExtensionMethod):
+    with pytest.raises(InvalidExtensionMethodError):
         BinaPy("foo").check("foo")
 
     @binapy_serializer("foo")
     def serialize(bp: BinaPy) -> BinaPy:
         return 1  # type: ignore[return-value]
 
-    with pytest.raises(InvalidExtensionMethod):
+    with pytest.raises(InvalidExtensionMethodError):
         BinaPy.serialize_to("foo", "foo")
 
     @binapy_checker("foo")

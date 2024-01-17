@@ -19,20 +19,11 @@ def test_deflate() -> None:
         b"hnContext>\r\n</samlp:AuthnRequest>"
     )
 
-    assert (
-        BinaPy("<this_is_a_test/>").to("deflate").to("hex")
-        == b"b329c9c82c8e07a2c4f892d4e2127d3b00"
-    )
+    assert BinaPy("<this_is_a_test/>").to("deflate").to("hex") == b"b329c9c82c8e07a2c4f892d4e2127d3b00"
 
 
 def test_zlib() -> None:
+    assert BinaPy(b"this is a test").to("zlib", level=9).hex() == "78da2bc9c82c5600a2448592d4e2120026330516"
     assert (
-        BinaPy(b"this is a test").to("zlib", level=9).hex()
-        == "78da2bc9c82c5600a2448592d4e2120026330516"
-    )
-    assert (
-        BinaPy("78da2bc9c82c5600a2448592d4e2120026330516")
-        .decode_from("hex")
-        .decode_from("zlib")
-        == b"this is a test"
+        BinaPy("78da2bc9c82c5600a2448592d4e2120026330516").decode_from("hex").decode_from("zlib") == b"this is a test"
     )
