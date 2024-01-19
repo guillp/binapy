@@ -1,18 +1,15 @@
 """Top-level package for BinaPy."""
 
+
 from .binapy import (
     BinaPy,
-    InvalidExtensionMethod,
+    InvalidExtensionMethodError,
     binapy_checker,
     binapy_decoder,
     binapy_encoder,
     binapy_parser,
     binapy_serializer,
 )
-from .compression import *
-from .encoding import *
-from .hashing import *
-from .parsing import *
 
 __all__ = [
     "BinaPy",
@@ -21,5 +18,7 @@ __all__ = [
     "binapy_encoder",
     "binapy_parser",
     "binapy_serializer",
-    "InvalidExtensionMethod",
+    "InvalidExtensionMethodError",
 ]
+
+from . import compression, encoding, hashing, parsing  # noqa: F401

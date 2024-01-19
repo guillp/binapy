@@ -12,6 +12,7 @@ def decode_hex(bp: bytes) -> bytes:
 
     Returns:
         the hex-decoded bytes value
+
     """
     return bytes.fromhex(bp.decode())
 
@@ -25,6 +26,7 @@ def encode_hex(bp: bytes) -> bytes:
 
     Returns:
         the hexadecimal encoded value
+
     """
     return bp.hex().encode()
 
@@ -38,5 +40,6 @@ def is_hex(bp: bytes) -> bool:
 
     Returns:
         `True` if `bp` is a valid hexadecimal string
+
     """
     return len(bp) % 2 == 0 and bp.isalnum() and set(bp.lower()).issubset(b"abcdef0123456789")

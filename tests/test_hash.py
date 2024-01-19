@@ -65,7 +65,7 @@ def test_sha(alg: str, append_salt: Optional[bool], hexhash: str) -> None:
     if append_salt is None:
         bp = data.encode_to(alg)
     else:
-        bp = data.encode_to(alg, salt, append_salt)
+        bp = data.encode_to(alg, salt=salt, append=append_salt)
 
     assert bp.hex() == hexhash
 
@@ -129,7 +129,7 @@ def test_shake(alg: str, append_salt: Optional[bool], length: int, hexhash: str)
     if append_salt is None:
         bp = data.encode_to(alg, length)
     else:
-        bp = data.encode_to(alg, length, salt, append_salt)
+        bp = data.encode_to(alg, length, salt=salt, append=append_salt)
     assert bp.hex() == hexhash
 
 
@@ -138,4 +138,4 @@ def test_invalid_shake_length() -> None:
         BinaPy("foo").to("shake128", 257)
 
     with pytest.raises(ValueError):
-        BinaPy("foo").to("sshake128", 257, b"salt")
+        BinaPy("foo").to("sshake128", 257, salt=b"salt")

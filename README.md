@@ -17,7 +17,7 @@ from binapy import BinaPy
 bp = BinaPy("Hello, World!").to("deflate").to("b64u")
 print(bp)
 # b'80jNycnXUQjPL8pJUQQA'
-bp.decode_from("b64u").decode_from("deflate").decode()
+bp.decode_from("b64u").decode_from("deflate").ascii()
 # "Hello, World!"
 isinstance(bp, bytes)
 # True

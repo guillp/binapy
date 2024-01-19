@@ -1,7 +1,7 @@
 """Implement support for 'dumb' ciphers such as Caesar cipher."""
+from __future__ import annotations
 
 import string
-from typing import Union
 
 from binapy import binapy_decoder, binapy_encoder
 
@@ -10,7 +10,7 @@ from binapy import binapy_decoder, binapy_encoder
 def encode_caesar(
     bp: bytes,
     shift: int,
-    alphabet: Union[None, str, bytes] = None,
+    alphabet: None | str | bytes = None,
 ) -> bytes:
     """Encode data with Caesar cipher.
 
@@ -33,6 +33,7 @@ def encode_caesar(
 
     Returns:
         the result of applying Caesar-cipher with `shift` positions to `bp`.
+
     """
     if not alphabet:
         if all(65 <= c <= 90 for c in bp):
@@ -49,21 +50,19 @@ def encode_caesar(
     if isinstance(alphabet, str):
         alphabet = alphabet.encode()
 
-    return bytes(
-        alphabet[(alphabet.index(c) + shift) % len(alphabet)] if c in alphabet else c
-        for c in bp
-    )
+    return bytes(alphabet[(alphabet.index(c) + shift) % len(alphabet)] if c in alphabet else c for c in bp)
 
 
 @binapy_decoder("caesar")
 def decode_caesar(
     bp: bytes,
     shift: int,
-    alphabet: Union[None, str, bytes] = None,
+    alphabet: None | str | bytes = None,
 ) -> bytes:
     """Decode data with Caesar cipher.
 
     Since encoding and decoding are symmetric, this is just an alias to `encode_caesar()` with an
     opposite shift.
+
     """
     return encode_caesar(bp, -shift, alphabet)

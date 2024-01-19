@@ -14,6 +14,7 @@ def compress_zlib(bp: bytes, level: int = 6) -> bytes:
 
     Returns:
         the compressed data
+
     """
     return zlib.compress(bp, level)
 
@@ -27,6 +28,7 @@ def decompress_zlib(bp: bytes) -> bytes:
 
     Returns:
         the decompressed data
+
     """
     return zlib.decompress(bp)
 
@@ -43,10 +45,9 @@ def compress_deflate(bp: bytes, level: int = -1) -> bytes:
 
     Returns:
         the compressed data.
+
     """
-    return zlib.compress(bp, level=level)[
-        2:-4
-    ]  # removes the 2 bytes zlib header and the final 4 bytes Adler checksum
+    return zlib.compress(bp, level=level)[2:-4]  # removes the 2 bytes zlib header and the final 4 bytes Adler checksum
 
 
 @binapy_decoder("deflate")
@@ -61,5 +62,6 @@ def decompress_deflate(bp: bytes, bufsize: int = zlib.DEF_BUF_SIZE) -> bytes:
 
     Returns:
         the decompressed data
+
     """
     return zlib.decompress(bp, wbits=-15, bufsize=bufsize)

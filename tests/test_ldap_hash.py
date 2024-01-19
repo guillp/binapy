@@ -15,10 +15,8 @@ from binapy import BinaPy
         ),
     ),
 )
-def test_validate_ldap_password_hash(
-    ldap_password_hash: bytes, hashing: str, hash_size: int, password: str
-) -> None:
+def test_validate_ldap_password_hash(ldap_password_hash: bytes, hashing: str, hash_size: int, password: str) -> None:
     bp = BinaPy(ldap_password_hash)
     header, hash_with_salt = bp.split(b"}", 1)
-    hash, salt = hash_with_salt.decode_from("b64").cut_at(hash_size)
-    assert BinaPy(password).encode_to(hashing, salt, append=True) == hash
+    hash, salt = hash_with_salt.decode_from("b64").split_at(hash_size)
+    assert BinaPy(password).encode_to(hashing, salt=salt, append=True) == hash
