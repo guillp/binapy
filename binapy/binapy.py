@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import secrets
+from contextlib import suppress
 from functools import wraps
 from typing import (
     Any,
@@ -117,13 +118,13 @@ class BinaPy(bytes):
             the decoded, matching `str`
 
         Raises:
-            ValueError: if the decoded str doesn't match `pattern`
+            ValueError: if the decoded str does not match `pattern`
 
         """
         res = self.decode(encoding)
         if re.match(pattern, res):
             return res
-        msg = f"This value doesn't match pattern {pattern}"
+        msg = f"This value does not match pattern {pattern}"
         raise ValueError(msg)
 
     def text(self, encoding: str = "ascii") -> str:
@@ -354,7 +355,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("check")
         if method is None:
-            msg = f"Extension {extension_name} doesn't have a checker method"
+            msg = f"Extension '{extension_name}' does not have a checker method"
             raise NotImplementedError(msg)
         return method
 
@@ -363,7 +364,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("decode")
         if method is None:
-            msg = f"Extension {extension_name} doesn't have a decode method"
+            msg = f"Extension '{extension_name}' does not have a decode method"
             raise NotImplementedError(msg)
         return method
 
@@ -372,7 +373,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("encode")
         if method is None:
-            msg = f"Extension {extension_name} doesn't have an encode method"
+            msg = f"Extension '{extension_name}' does not have an encode method"
             raise NotImplementedError(msg)
         return method
 
@@ -381,7 +382,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("parse")
         if method is None:
-            msg = f"Extension {extension_name} doesn't have a parse method"
+            msg = f"Extension '{extension_name}' does not have a parse method"
             raise NotImplementedError(msg)
         return method
 
@@ -390,7 +391,7 @@ class BinaPy(bytes):
         extension_methods = cls._get_extension_methods(extension_name)
         method = extension_methods.get("serialize")
         if method is None:
-            msg = f"Extension {extension_name} doesn't have a serialize method"
+            msg = f"Extension '{extension_name}' does not have a serialize method"
             raise NotImplementedError(msg)
         return method
 
@@ -440,12 +441,12 @@ class BinaPy(bytes):
 
         return decoder(self, *args, **kwargs)
 
-    def check(self, name: str, *, decode: bool = False, raise_on_error: bool = False) -> bool:  # noqa: PLR0912
+    def check(self, name: str, *, decode: bool = False, raise_on_error: bool = False) -> bool:
         """Check that this BinaPy conforms to a given format extension.
 
         Args:
             name: the name of the extension to check
-            decode: if `True`, and the given extension doesn't have a checker method,
+            decode: if `True`, and the given extension does not have a checker method,
                 try to decode this BinaPy using the decoder method to check if that works.
             raise_on_error: if `True`, exceptions from the checker method, if any,
                 will be raised instead of returning `False`.
@@ -454,7 +455,7 @@ class BinaPy(bytes):
             a boolean, that is True if this BinaPy conforms to the given extension format, False otherwise.
 
         """
-        # raises an exception in case the extension doesn't exist
+        # raises an exception in case the extension does not exist
         self._get_extension_methods(name)
 
         try:
@@ -468,20 +469,19 @@ class BinaPy(bytes):
                     raise exc from exc
                 return False
         except NotImplementedError:
-            try:
-                # if checker is not implemented and decode is True, try to decode instead
-                if decode:
-                    decoder = self._get_decoder(name)
-                    try:
-                        decoder(self)
-                    except Exception as exc:
-                        if raise_on_error:
-                            raise exc from exc
-                        return False
-                    else:
-                        return True
-            except NotImplementedError:
-                return False
+            # if checker is not implemented and decode is True, try to decode instead
+            if decode:
+                decoder = self._get_decoder(name)
+                try:
+                    decoder(self)
+                except Exception as exc:
+                    if raise_on_error:
+                        raise exc from exc
+                    return False
+                else:
+                    return True
+            else:
+                raise
         return False
 
     def check_all(self, *, decode: bool = False) -> list[str]:
@@ -498,9 +498,10 @@ class BinaPy(bytes):
 
         def get_results() -> Iterator[str]:
             for name in self.extensions:
-                success = self.check(name, decode=decode)
-                if success is True:
-                    yield name
+                with suppress(NotImplementedError):
+                    success = self.check(name, decode=decode)
+                    if success is True:
+                        yield name
 
         return list(get_results())
 

@@ -120,6 +120,30 @@ def test_unknown_features() -> None:
     with pytest.raises(NotImplementedError):
         BinaPy.serialize_to("something_not_known", {"foo": "bar"})
 
+    @binapy_encoder("something_known")
+    def encode_something(bp: bytes) -> bytes:
+        return bp
+
+    with pytest.raises(NotImplementedError, match="Extension 'something_known' does not have a decode method"):
+        bp.decode_from("something_known")
+
+    with pytest.raises(NotImplementedError, match="Extension 'something_known' does not have a parse method"):
+        bp.parse_from("something_known")
+
+    with pytest.raises(NotImplementedError, match="Extension 'something_known' does not have a serialize method"):
+        bp.serialize_to("something_known")
+
+    with pytest.raises(NotImplementedError, match="Extension 'something_known' does not have a checker method"):
+        bp.check("something_known")
+
+    @binapy_decoder("something_else")
+    def decode_something_else(bp: bytes) -> bytes:
+        return bp
+
+    with pytest.raises(NotImplementedError, match="Extension 'something_else' does not have an encode method"):
+        bp.encode_to("something_else")
+
+
 
 def test_exceptions() -> None:
     @binapy_decoder("some_feature")
@@ -128,7 +152,8 @@ def test_exceptions() -> None:
 
     bp = BinaPy()
 
-    assert bp.check("some_feature") is False
+    with pytest.raises(NotImplementedError):
+        bp.check("some_feature")
     assert bp.check("some_feature", decode=True) is True
 
     @binapy_decoder("other_feature")
@@ -136,7 +161,8 @@ def test_exceptions() -> None:
         raise ValueError()
 
     bp = BinaPy()
-    assert bp.check("other_feature") is False
+    with pytest.raises(NotImplementedError):
+        bp.check("other_feature")
     assert bp.check("other_feature", decode=True) is False
 
     with pytest.raises(ValueError):
