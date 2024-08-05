@@ -1,4 +1,5 @@
 """Helpers for the Shake Hash family."""
+
 import functools
 import hashlib
 from typing import Callable, Sequence
@@ -9,8 +10,7 @@ from binapy import binapy_encoder
 
 
 class ShakeProtocol(Protocol):
-    def digest(self, length: int) -> bytes:
-        ...  # pragma: no cover
+    def digest(self, length: int) -> bytes: ...  # pragma: no cover
 
 
 def shake_hash(func: Callable[[bytes], ShakeProtocol], bp: bytes, length: int) -> bytes:

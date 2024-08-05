@@ -1,5 +1,7 @@
 """This module contains helpers for converting data to/from JSON."""
 
+from __future__ import annotations
+
 import json
 from datetime import datetime
 from typing import Any, Callable, Iterable, Mapping
@@ -23,9 +25,9 @@ def _default_json_encode(data: Any) -> Any:
     """
     if isinstance(data, datetime):
         return int(data.timestamp())
-    elif isinstance(data, Mapping):
+    if isinstance(data, Mapping):
         return dict(data)
-    elif isinstance(data, Iterable):
+    if isinstance(data, Iterable):
         return list(data)
     return str(data)
 

@@ -14,8 +14,7 @@ from binapy import binapy_checker, binapy_encoder
 
 
 class ShaProtocol(Protocol):
-    def digest(self) -> bytes:
-        ...  # pragma: no cover
+    def digest(self) -> bytes: ...  # pragma: no cover
 
 
 def sha_hash(func: Callable[[bytes], ShaProtocol], bp: bytes) -> bytes:

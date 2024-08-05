@@ -1,4 +1,5 @@
 """This module contains helpers for compressing/decompressing data using `zlib`."""
+
 import zlib
 
 from binapy import binapy_decoder, binapy_encoder

@@ -18,7 +18,7 @@ from typing import (
     overload,
 )
 
-from typing_extensions import Literal
+from typing_extensions import Literal, Self
 
 
 class BinaPy(bytes):
@@ -41,7 +41,7 @@ class BinaPy(bytes):
         value: bytes | str | int | SupportsBytes = b"",
         encoding: str = "utf-8",
         errors: str = "strict",
-    ) -> BinaPy:
+    ) -> Self:
         """Override base method to accept a string with a default encoding of "utf-8".
 
         See Also:
@@ -249,12 +249,10 @@ class BinaPy(bytes):
         return cls(secrets.token_bytes(length // 8))
 
     @overload
-    def __getitem__(self, index: SupportsIndex) -> int:
-        ...  # pragma: no cover
+    def __getitem__(self, index: SupportsIndex) -> int: ...  # pragma: no cover
 
     @overload
-    def __getitem__(self, slice: slice) -> BinaPy:  # noqa: A002
-        ...  # pragma: no cover
+    def __getitem__(self, slice: slice) -> BinaPy: ...  # pragma: no cover
 
     def __getitem__(self, slice: slice | SupportsIndex) -> int | BinaPy:  # noqa: A002
         """Override the base method so that slicing returns a BinaPy instead of just bytes.
@@ -286,7 +284,7 @@ class BinaPy(bytes):
 
     def __add__(
         self,
-        other: Any,
+        other: object,
     ) -> BinaPy:
         """Override base method so that addition returns a BinaPy instead of bytes.
 
@@ -297,7 +295,9 @@ class BinaPy(bytes):
             a BinaPy
 
         """
-        return self.__class__(super().__add__(other))
+        if isinstance(other, bytes):
+            return self.__class__(super().__add__(other))
+        raise NotImplementedError
 
     def __radd__(self, other: bytes) -> BinaPy:
         """Override base method so that right addition returns a BinaPy instead of bytes.
@@ -395,7 +395,7 @@ class BinaPy(bytes):
             raise NotImplementedError(msg)
         return method
 
-    def encode_to(self, name: str, *args: Any, **kwargs: Any) -> BinaPy:
+    def encode_to(self, name: str, *args: Any, **kwargs: object) -> BinaPy:
         """Encode data from this BinaPy according to the format `name`.
 
         Args:
@@ -411,7 +411,7 @@ class BinaPy(bytes):
 
         return encoder(self, *args, **kwargs)
 
-    def to(self, name: str, *args: Any, **kwargs: Any) -> BinaPy:
+    def to(self, name: str, *args: object, **kwargs: object) -> BinaPy:
         """Alias for `encode_to()`.
 
         Args:
