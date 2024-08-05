@@ -1,4 +1,5 @@
 """This module implements helpers for (de)serializing to/from Python `pickle` objects."""
+
 from __future__ import annotations
 
 import pickle

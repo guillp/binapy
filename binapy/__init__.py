@@ -1,6 +1,5 @@
 """Top-level package for BinaPy."""
 
-
 from .binapy import (
     BinaPy,
     InvalidExtensionMethodError,

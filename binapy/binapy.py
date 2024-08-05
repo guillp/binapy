@@ -249,12 +249,10 @@ class BinaPy(bytes):
         return cls(secrets.token_bytes(length // 8))
 
     @overload
-    def __getitem__(self, index: SupportsIndex) -> int:
-        ...  # pragma: no cover
+    def __getitem__(self, index: SupportsIndex) -> int: ...  # pragma: no cover
 
     @overload
-    def __getitem__(self, slice: slice) -> BinaPy:  # noqa: A002
-        ...  # pragma: no cover
+    def __getitem__(self, slice: slice) -> BinaPy: ...  # pragma: no cover
 
     def __getitem__(self, slice: slice | SupportsIndex) -> int | BinaPy:  # noqa: A002
         """Override the base method so that slicing returns a BinaPy instead of just bytes.

@@ -1,4 +1,5 @@
 """Implement support for 'dumb' ciphers such as Caesar cipher."""
+
 from __future__ import annotations
 
 import string
