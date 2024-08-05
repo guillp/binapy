@@ -6,6 +6,7 @@ import re
 import secrets
 from contextlib import suppress
 from functools import wraps
+from itertools import zip_longest
 from typing import (
     Any,
     Callable,
@@ -338,6 +339,38 @@ class BinaPy(bytes):
         return tuple(self.__class__(self[start:end]) for start, end in zip([0, *spos], [*spos, len(self)]))
 
     cut_at = split_at  # for backward compatibility
+
+    def split_every(self, n: int, filler: bytes = b"") -> tuple[BinaPy, ...]:
+        """Split this BinaPy into chunks of size `n`.
+
+        If filler is b'' (default), last chunk may be smaller than `n`.
+        Use a single char bytes instead for equally sized chunks.
+
+        Args:
+            n: size of chunks
+            filler: char to use to fill the last chunk
+
+        Returns:
+            a tuple of `len(self)/n` (rounded up) items.
+
+        """
+        div, mod = divmod(len(self), n)
+        if div == 0:
+            return (self + filler * (n - len(self)),)
+        if mod == 0:
+            return self.split_at(*range(n, len(self), n))
+        chunks = self.split_at(*range(n, len(self), n))
+        return *chunks[:-1], chunks[-1] + filler * (n - mod)
+
+    def transpose(self, n: int, filler: bytes = b"") -> BinaPy:
+        """Reorder this BinaPy bytes from lines to columns."""
+
+        def iter_chunks() -> Iterator[bytes]:
+            lines = self.split_every(n, filler=filler)
+            for column in zip_longest(*lines):
+                yield bytes(c for c in column if c is not None)
+
+        return BinaPy(b"".join(iter_chunks()))
 
     extensions: ClassVar[dict[str, dict[str, Callable[..., Any]]]] = {}
     """Extension registry."""

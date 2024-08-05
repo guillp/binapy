@@ -62,6 +62,13 @@ def test_binapy() -> None:
 
     assert BinaPy.serialize_to("json", JSON).parse_from("json") == JSON
 
+    assert BinaPy("0123456789").split_at(3,5,8) == (b"012", b"34", b"567", b'89')
+    assert BinaPy("0123456789").split_every(4) == (b"0123", b"4567", b"89")
+    assert BinaPy("0123456789").split_every(12) == (b"0123456789",)
+    assert BinaPy("0123456789").split_every(4, filler=b' ') == (b"0123", b"4567", b"89  ")
+
+    assert BinaPy("0123456789").transpose(3) == b"0369147258"
+    assert BinaPy("0123456789").transpose(3, filler=b' ') == b"0369147 258 "
 
 def test_slicing() -> None:
     bp = BinaPy("1234567890")
