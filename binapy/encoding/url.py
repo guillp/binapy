@@ -22,8 +22,7 @@ def url_encode(bp: bytes, *, safe: str = "/", plus_spaces: bool = True) -> str:
     """
     if plus_spaces:
         return quote_plus(bp, safe=safe)
-    else:
-        return quote(bp, safe=safe)
+    return quote(bp, safe=safe)
 
 
 @binapy_decoder("url")
@@ -48,5 +47,4 @@ def url_decode(bp: bytes, *, plus_spaces: bool = True, errors: str = "replace") 
     """
     if plus_spaces:
         return unquote_plus(bp.decode(), errors=errors).encode()
-    else:
-        return unquote(bp.decode(), errors=errors).encode()
+    return unquote(bp.decode(), errors=errors).encode()

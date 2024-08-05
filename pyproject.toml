@@ -76,40 +76,10 @@ exclude = [
 
 [tool.ruff.lint]
 select = [
-    "A",
-    "B",
-    "C",
-    "C4",
-    "D",
-    "DTZ",
-    "E",
-    "EM",
-    "ERA",
-    "F",
-    "FA",
-    "FBT",
-    "I",
-    "ICN",
-    "ISC",
-    "N",
-    "PGH",
-    "PLC",
-    "PLE",
-    "PLR",
-    "PLW",
-    "PTH",
-    "Q",
-    "RUF",
-    "S",
-    "SIM",
-    "T",
-    "TID",
-    "TRY",
-    "UP",
-    "W",
-    "YTT",
+    "ALL"
 ]
 ignore = [
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed in `**kwargs`
     "PLR2004", # Magic value used in comparison
     "D402", # First line should not be the function's signature
     "ISC001",
